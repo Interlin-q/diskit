@@ -14,3 +14,8 @@ class CircuitRemapper:
         Remap the circuit for the topology.
         '''
         return None
+
+    def _circuit_to_layers(self):
+        '''Given a Qiskit circuit, return an array of the layers of that circuit'''        
+        # TODO implement this
+        pass
