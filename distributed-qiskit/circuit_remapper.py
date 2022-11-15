@@ -2,17 +2,10 @@
 The circuit remapper logic.
 '''
 from qiskit.circuit import QuantumCircuit
-from qiskit import transpile, assemble, Aer, IBMQ
-from qiskit.visualization import plot_histogram, plot_bloch_multivector
-from sympy import Matrix
-import matplotlib.pyplot as plt
-from qiskit.circuit.instruction import Instruction
-from qiskit.circuit.quantumcircuitdata import QuantumCircuitData, CircuitInstruction
-from qiskit.circuit.classicalregister import ClassicalRegister, Clbit
-from qiskit.circuit.quantumregister import QuantumRegister, Qubit
+from qiskit.circuit.quantumcircuitdata import CircuitInstruction
+from qiskit.circuit.classicalregister import Clbit
+from qiskit.circuit.quantumregister import Qubit
 from qiskit.circuit.library.standard_gates.h import *
-import qiskit
-import numpy as np
 
 from typing import (
     Union,
@@ -114,32 +107,45 @@ class CircuitRemapper:
         Args:
             layers: A list of layers, where each layer is a list of
                 :class:`~qiskit.circuit.Instruction`
+        return: A circuit from the layers.
         """
         circuit = QuantumCircuit(name=name, global_phase=global_phase, metadata=metadata)
         added_qubits = set()
         added_clbits = set()
+        added_qregs = set()
+        added_cregs = set()
         if qubits:
             qubits = list(qubits)
             circuit.add_bits(qubits)
             added_qubits.update(qubits)
+            added_qregs.update(qubit.register for qubit in qubits)
+            print("added_qregs: ", added_qregs)
         if clbits:
             clbits = list(clbits)
             circuit.add_bits(clbits)
             added_clbits.update(clbits)
+            added_cregs.update(clbit.register for clbit in clbits)
+            print("added_cregs: ", added_cregs)
         for layer in layers:
             for instruction in layer:
     #             print(instruction)
                 if not isinstance(instruction, CircuitInstruction):
                     instruction = CircuitInstruction(*instruction)
-                qubits = [qubit for qubit in instruction.qubits if qubit not in added_qubits]
-                clbits = [clbit for clbit in instruction.clbits if clbit not in added_clbits]
+                qubits = [qubit for qubit in instruction.qubits if qubit not in added_qubits and qubit.register not in added_qregs]
+                clbits = [clbit for clbit in instruction.clbits if clbit not in added_clbits and clbit.register not in added_cregs]
+                qregs = [qubit.register for qubit in qubits]
+                cregs = [clbit.register for clbit in clbits]
                 circuit.add_bits(qubits)
                 circuit.add_bits(clbits)
+                circuit.add_register(*qregs)
+                circuit.add_register(*cregs)
                 added_qubits.update(qubits)
                 added_clbits.update(clbits)
+                added_qregs.update(qregs)
+                added_cregs.update(cregs)
                 circuit._append(instruction)
         self.circuit = circuit
 
-        return None
+        return circuit
 
 
