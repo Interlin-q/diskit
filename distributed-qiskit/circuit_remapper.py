@@ -119,13 +119,16 @@ class CircuitRemapper:
             circuit.add_bits(qubits)
             added_qubits.update(qubits)
             added_qregs.update(qubit.register for qubit in qubits)
-            print("added_qregs: ", added_qregs)
+            circuit.add_register(*added_qregs)
+            
+#             print("added_qregs: ", added_qregs)
         if clbits:
             clbits = list(clbits)
             circuit.add_bits(clbits)
             added_clbits.update(clbits)
             added_cregs.update(clbit.register for clbit in clbits)
-            print("added_cregs: ", added_cregs)
+            circuit.add_register(*added_cregs)
+#             print("added_cregs: ", added_cregs)
         for layer in layers:
             for instruction in layer:
     #             print(instruction)
