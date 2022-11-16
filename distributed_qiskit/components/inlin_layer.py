@@ -1,6 +1,7 @@
 from typing import List, Optional
 from qiskit.circuit.quantumcircuitdata import CircuitInstruction
 
+
 class Layer(object):
     """
     Layer object which is a collection of operations to be applied on the qubits in the system.

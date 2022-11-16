@@ -8,17 +8,8 @@ from qiskit.circuit.quantumregister import Qubit
 from qiskit.circuit.library.standard_gates.h import *
 
 from typing import (
-    Union,
     Optional,
     List,
-    Dict,
-    Tuple,
-    Type,
-    TypeVar,
-    Sequence,
-    Callable,
-    Mapping,
-    Set,
     Iterable,
 )
 
@@ -148,5 +139,4 @@ class CircuitRemapper:
                 added_cregs.update(cregs)
                 circuit._append(instruction)
         self.circuit = circuit
-
         return circuit
