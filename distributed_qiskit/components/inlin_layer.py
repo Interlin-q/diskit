@@ -1,13 +1,13 @@
 from typing import List, Optional
 from qiskit.circuit.quantumcircuitdata import CircuitInstruction
-
+from .topology import topology
 
 class Layer(object):
     """
     Layer object which is a collection of operations to be applied on the qubits in the system.
     """
 
-    def __init__(self, operations: Optional[List[CircuitInstruction]] = None):
+    def __init__(self, operations: Optional[List[CircuitInstruction]] = None, topology:topology=None):
         """
         Returns the important things for a layer in a quantum circuit
         Args:
@@ -16,6 +16,7 @@ class Layer(object):
         """
 
         self._operations = operations if operations is not None else []
+        self._topology = topology
 
     def __str__(self):
         layer = ""
@@ -35,14 +36,6 @@ class Layer(object):
         """
         return self._operations
 
-    @property
-    def depth(self):
-        # TODO
-        return 0
-
-    def __len__(self):
-        return self.depth
-
     def add_operation(self, operation: CircuitInstruction):
         """
         Add a operation to the layer
@@ -61,7 +54,7 @@ class Layer(object):
 
         self._operations.extend(operations)
 
-    def control_gate_present(self):
+    def non_local_operations(self):
         """
         Check if a control gate is present in the layer between two different
         computing hosts
@@ -70,13 +63,14 @@ class Layer(object):
                 hosts
         """
 
-        control_gate_present = False
+        non_local_ops = []
 
-        pass
-        # for operation in self._operations:
-        #     if operation.name == "TWO_QUBIT" and len(operation.computing_host_ids) == 2:
-        #         control_gate_present = True
-        return control_gate_present
+        for operation in self._operations:
+            if len(operation.qubits) == 2:
+                if not self._topology.are_adjacent(operation.qubits[0], operation.qubits[1]):
+                    non_local_ops.append(operation)
+
+        return non_local_ops
 
     def remove_operation(self, index: int):
         """
@@ -86,3 +80,5 @@ class Layer(object):
         """
 
         self._operations.pop(index)
+    
+    

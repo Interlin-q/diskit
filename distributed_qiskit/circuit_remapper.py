@@ -34,7 +34,7 @@ class CircuitRemapper:
             filter_function: Optional[callable] = lambda x: not getattr(
                 x.operation, "_directive", False
             ),
-    ) -> list[list]:
+    ) -> "list[list]":
         """Given a Qiskit circuit, return an array of the layers of that circuit"""
         # Assign each bit in the circuit a unique integer
         # to index into op_stack.
