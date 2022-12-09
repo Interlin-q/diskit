@@ -52,7 +52,8 @@ class CircuitRemapper:
         for instruction in circ.data:
             levels = []
             reg_ints = []
-            considered = False
+            max_pos = 0
+
             for ind, reg in enumerate(instruction.qubits + instruction.clbits):
                 # Add to the stacks of the qubits and
                 # cbits used in the gate.
@@ -61,11 +62,11 @@ class CircuitRemapper:
                     levels.append(op_stack[reg_ints[ind]] + 1)
                     if len(layers) < (op_stack[reg_ints[ind]] + 1):
                         layers.append([])
-                    if not considered:
-                        layers[op_stack[reg_ints[ind]]].append(instruction)
-                        considered = True
+                    max_pos = max(max_pos, (op_stack[reg_ints[ind]]))                                
                 else:
                     levels.append(op_stack[reg_ints[ind]])
+
+            layers[max_pos].append(instruction)
             # Assuming here that there is no conditional
             # snapshots or barriers ever.
             if getattr(instruction.operation, "condition", None):

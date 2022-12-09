@@ -1,13 +1,15 @@
 from typing import List, Optional
 from qiskit.circuit.quantumcircuitdata import CircuitInstruction
-from .topology import topology
-
+from .topology import Topology
+from qiskit.circuit import QuantumCircuit
+from qiskit.circuit.quantumregister import QuantumRegister, Qubit
+from qiskit.circuit.classicalregister import ClassicalRegister, Clbit
 class Layer(object):
     """
     Layer object which is a collection of operations to be applied on the qubits in the system.
     """
 
-    def __init__(self, operations: Optional[List[CircuitInstruction]] = None, topology:topology=None):
+    def __init__(self, operations: Optional[List[CircuitInstruction]] = None, topology:Topology=None):
         """
         Returns the important things for a layer in a quantum circuit
         Args:
@@ -80,5 +82,51 @@ class Layer(object):
         """
 
         self._operations.pop(index)
+
+    @staticmethod
+    def replace_nonlocal_controls(non_local_ops:List[CircuitInstruction], topology:Topology):
+        """
+        Replace the non-local control gates with Cat entanglement gates for a given layer
+        Args:
+            non_local_ops (list): List of non-local control gates
+        Returns:
+            (list): List of new operations to be added in the layer
+        """
+        #TODO: Implement this function
+
+        for operation in non_local_ops:
+            control_qubit = operation.qubits[0]
+            target_qubit = operation.qubits[1]
+            control_host = topology.get_host(control_qubit)
+            target_host = topology.get_host(target_qubit)
+
+            
+            epr_qubits = QuantumRegister(2, "epr")
+            opr_qubits = QuantumRegister(2, "opr")
+            measure_bits = ClassicalRegister(2, "measure")
+            qc = QuantumCircuit(epr_qubits, opr_qubits, measure_bits)
+
+            # Generate EPR pair
+            qc.h(0)
+            qc.cx(0, 1)
+            
+            # cat entanglement
+            qc.cx(2,0)
+            qc.measure(0,0)
+            qc.x(1).c_if(measure_bits[0], 1)
+            qc.cx(1,3)
+            qc.h(1)
+            qc.measure(1,1)
+            qc.z(2).c_if(measure_bits[1], 1)
+            
+            qc.reset(epr_qubits)
+
+            # Add the new operations to the layer
+            new_ops = []
+            for op in qc.data:
+                new_ops.append(op)
+            
+        return new_ops
+
     
     

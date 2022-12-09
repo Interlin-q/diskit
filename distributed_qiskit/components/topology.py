@@ -28,6 +28,13 @@ class Topology:
             if qubit1 in self.q_map[host] and qubit2 in self.q_map[host]:
                 return True
         return False
+    
+    def get_host(self, qubit : str):
+        """Return the host of qubit"""
+        for host in self.q_hosts:
+            if qubit in self.q_map[host]:
+                return host
+        return None
 
     
 
