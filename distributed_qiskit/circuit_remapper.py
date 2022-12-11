@@ -3,10 +3,11 @@ The circuit remapper logic.
 """
 from qiskit.circuit import QuantumCircuit
 from qiskit.circuit.quantumcircuitdata import CircuitInstruction
-from qiskit.circuit.classicalregister import Clbit
-from qiskit.circuit.quantumregister import Qubit
+from qiskit.circuit.quantumregister import QuantumRegister, Qubit
+from qiskit.circuit.classicalregister import ClassicalRegister, Clbit
 from qiskit.circuit.library.standard_gates.h import *
-
+from components.layer import Layer
+from components.topology import Topology
 from typing import (
     Optional,
     List,
@@ -23,11 +24,6 @@ class CircuitRemapper:
         self.circuit = circuit
         self.topology = topology
 
-    def remap_circuit(self):
-        """
-        Remap the circuit for the topology.
-        """
-        return None
 
     def _circuit_to_layers(
             self,
@@ -89,10 +85,10 @@ class CircuitRemapper:
         return layers
 
     def _layer_to_circuit(self, layers: Iterable[List], *, qubits: Iterable[Qubit] = (),
-                          clbits: Iterable[Clbit] = (),
-                          name: Optional[str] = None,
-                          global_phase=0,
-                          metadata: Optional[dict] = None, ) -> "QuantumCircuit":
+                        clbits: Iterable[Clbit] = (),
+                        name: Optional[str] = None,
+                        global_phase=0,
+                        metadata: Optional[dict] = None, ) -> "QuantumCircuit":
         """Return a circuit from a list of layers.
 
         Args:
@@ -125,9 +121,9 @@ class CircuitRemapper:
                 if not isinstance(instruction, CircuitInstruction):
                     instruction = CircuitInstruction(*instruction)
                 qubits = [qubit for qubit in instruction.qubits if
-                          qubit not in added_qubits and qubit.register not in added_qregs]
+                        qubit not in added_qubits and qubit.register not in added_qregs]
                 clbits = [clbit for clbit in instruction.clbits if
-                          clbit not in added_clbits and clbit.register not in added_cregs]
+                        clbit not in added_clbits and clbit.register not in added_cregs]
                 qregs = [qubit.register for qubit in qubits]
                 cregs = [clbit.register for clbit in clbits]
                 circuit.add_bits(qubits)
@@ -141,3 +137,80 @@ class CircuitRemapper:
                 circuit._append(instruction)
         self.circuit = circuit
         return circuit
+    
+    @staticmethod
+    def replace_nonlocal_control(operation:CircuitInstruction, topology:Topology):
+        """
+        Replace the non-local control gates with Cat entanglement gates for a given layer
+        Args:
+            non_local_op: a non-local control gate
+        Returns:
+            (list): List of new operations to be added in the layer
+        """
+        #TODO: Implement this function
+
+        
+        control_qubit = operation.qubits[0]
+        target_qubit = operation.qubits[1]
+        control_host = topology.get_host(control_qubit)
+        target_host = topology.get_host(target_qubit)
+
+        epr_control = topology.get_epr_id(control_host)
+        epr_target = topology.get_epr_id(target_host)
+        
+        epr_qubits = [epr_control, epr_target]
+        opr_qubits = [control_qubit, target_qubit]
+        measure_bits = ClassicalRegister(2, "cat_measure")
+        qc = QuantumCircuit(epr_qubits, opr_qubits, measure_bits)
+
+        # Generate EPR pair
+        qc.h(0)
+        qc.cx(0, 1)
+        
+        # cat entanglement
+        qc.cx(2,0)
+        qc.measure(0,0)
+        qc.x(1).c_if(measure_bits[0], 1)
+        qc.cx(1,3)
+        qc.h(1)
+        qc.measure(1,1)
+        qc.z(2).c_if(measure_bits[1], 1)
+        
+        qc.reset(epr_qubits)
+
+        # Make layers from this circuit
+        new_ops = []
+        for op in qc.data:
+            new_ops.append([op])
+            
+        return new_ops
+
+    def remap_circuit(self):
+        """
+        Remap the circuit for the topology.
+        """
+        layers = self._circuit_to_layers()
+        distributed_layers = []
+        for a_layer in layers:
+            layer_now = Layer(a_layer,self.topology)
+
+            non_local_ops = layer_now.non_local_operations()
+            new_layers = [[]]
+            if non_local_ops != []:
+                for operation in non_local_ops:
+                    op_replaced = self.replace_nonlocal_control(operation, self.topology)
+                    new_layers.extend(op_replaced)
+            
+            local_ops = []
+            for operation in a_layer:
+                if operation not in non_local_ops:
+                    local_ops.append(operation)
+            
+            new_layers[0].extend(local_ops)
+            
+            distributed_layers.extend(new_layers)
+        # for layer in distributed_layers:
+        #     print(layer)
+        dist_circ = self._layer_to_circuit(distributed_layers)
+            
+        return dist_circ

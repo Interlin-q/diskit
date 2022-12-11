@@ -6,9 +6,10 @@ class Topology:
     Topology class for a distributed architecture.
     """
 
-    def __init__(self, q_map : Dict[str, List[str]]):
+    def __init__(self, q_map : Dict[str, List[str]], e_map:Dict[str, List[str]] = None):
         """Initialize the topology object"""
         self.q_map = q_map
+        self.e_map = e_map
         self.q_hosts = list(q_map.keys())
         self.qubits = []
         for qubit in q_map.values():
@@ -35,6 +36,11 @@ class Topology:
             if qubit in self.q_map[host]:
                 return host
         return None
+
+    def get_epr_id(self, host):
+        """ Return the epr qubit IDs """
+        return self.e_map[host]
+
 
     
 
