@@ -148,39 +148,42 @@ class CircuitRemapper:
             (list): List of new operations to be added in the layer
         """
         #TODO: Implement this function
-
+    
         
         control_qubit = operation.qubits[0]
         target_qubit = operation.qubits[1]
         control_host = topology.get_host(control_qubit)
         target_host = topology.get_host(target_qubit)
-
+        ent_inst = operation.copy()
         epr_control = topology.get_epr_id(control_host)
         epr_target = topology.get_epr_id(target_host)
         
         epr_qubits = [epr_control, epr_target]
         opr_qubits = [control_qubit, target_qubit]
         measure_bits = ClassicalRegister(2, "cat_measure")
-        qc = QuantumCircuit(epr_qubits, opr_qubits, measure_bits)
+        circ = QuantumCircuit(epr_qubits, opr_qubits, measure_bits)
 
         # Generate EPR pair
-        qc.h(0)
-        qc.cx(0, 1)
+        circ.h(0)
+        circ.cx(0, 1)
         
         # cat entanglement
-        qc.cx(2,0)
-        qc.measure(0,0)
-        qc.x(1).c_if(measure_bits[0], 1)
-        qc.cx(1,3)
-        qc.h(1)
-        qc.measure(1,1)
-        qc.z(2).c_if(measure_bits[1], 1)
+        circ.cx(2,0)
+        circ.measure(0,0)
+        circ.x(1).c_if(measure_bits[0], 1)
+
+        ent_inst.qubits = [epr_qubits[1], opr_qubits[1]]
+        circ.data.append(ent_inst)
+
+        circ.h(1)
+        circ.measure(1,1)
+        circ.z(2).c_if(measure_bits[1], 1)
         
-        qc.reset(epr_qubits)
+        circ.reset(epr_qubits)
 
         # Make layers from this circuit
         new_ops = []
-        for op in qc.data:
+        for op in circ.data:
             new_ops.append([op])
             
         return new_ops
