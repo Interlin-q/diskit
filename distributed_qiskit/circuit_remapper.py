@@ -191,6 +191,7 @@ class CircuitRemapper:
     def remap_circuit(self):
         """
         Remap the circuit for the topology.
+        Returns: a distributed circuit over the topology
         """
         layers = self._circuit_to_layers()
         distributed_layers = []
@@ -212,8 +213,27 @@ class CircuitRemapper:
             new_layers[0].extend(local_ops)
             
             distributed_layers.extend(new_layers)
-        # for layer in distributed_layers:
-        #     print(layer)
+
         dist_circ = self._layer_to_circuit(distributed_layers)
             
         return dist_circ
+
+    @staticmethod
+    def collate_measurements(sim_results:dict, num_qubits:int):
+        """
+        Collate the measurements from the simulation results
+        Args:
+            sim_results: simulation results from the simulator
+            num_qubits: number of qubits in the circuit
+        Returns: A dictionary of measurements
+        """
+        sim_dict = {}
+        for key in sim_results.keys():
+            new_key = key[0:num_qubits]
+            if new_key not in sim_dict.keys():
+                sim_dict[new_key] = sim_results[key]
+            else:
+                sim_dict[new_key] += sim_results[key]
+        
+        return sim_dict
+        
