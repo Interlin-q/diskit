@@ -20,13 +20,12 @@ class CircuitRemapper:
     The circuit remapper class for remapping a ciruit to a topology.
     """
 
-    def __init__(self, circuit, topology):
-        self.circuit = circuit
+    def __init__(self, topology):
         self.topology = topology
 
-
+    @staticmethod
     def _circuit_to_layers(
-            self,
+            circuit: QuantumCircuit,
             filter_function: Optional[callable] = lambda x: not getattr(
                 x.operation, "_directive", False
             ),
@@ -34,7 +33,7 @@ class CircuitRemapper:
         """Given a Qiskit circuit, return an array of the layers of that circuit"""
         # Assign each bit in the circuit a unique integer
         # to index into op_stack.
-        circ = self.circuit
+        circ = circuit
         bit_indices = {bit: idx for idx, bit in enumerate(circ.qubits + circ.clbits)}
 
         # If no bits, return 0
@@ -84,7 +83,8 @@ class CircuitRemapper:
         assert max(op_stack) == len(layers)
         return layers
 
-    def _layer_to_circuit(self, layers: Iterable[List], *, qubits: Iterable[Qubit] = (),
+    @staticmethod
+    def _layer_to_circuit(layers: Iterable[List], *, qubits: Iterable[Qubit] = (),
                         clbits: Iterable[Clbit] = (),
                         name: Optional[str] = None,
                         global_phase=0,
@@ -135,20 +135,18 @@ class CircuitRemapper:
                 added_qregs.update(qregs)
                 added_cregs.update(cregs)
                 circuit._append(instruction)
-        self.circuit = circuit
         return circuit
     
     @staticmethod
-    def replace_nonlocal_control(operation:CircuitInstruction, topology:Topology):
+    def replace_nonlocal_control(operation:CircuitInstruction, topology:Topology, 
+    deeper_ops:List[CircuitInstruction]=None):
         """
         Replace the non-local control gates with Cat entanglement gates for a given layer
         Args:
             non_local_op: a non-local control gate
         Returns:
             (list): List of new operations to be added in the layer
-        """
-        #TODO: Implement this function
-    
+        """  
         
         control_qubit = operation.qubits[0]
         target_qubit = operation.qubits[1]
@@ -160,6 +158,10 @@ class CircuitRemapper:
         
         epr_qubits = [epr_control, epr_target]
         opr_qubits = [control_qubit, target_qubit]
+        if len(deeper_ops) > 0:
+            for op in deeper_ops:
+                opr_qubits.append(op.qubits[1])
+
         measure_bits = ClassicalRegister(2, "cat_measure")
         circ = QuantumCircuit(epr_qubits, opr_qubits, measure_bits)
 
@@ -174,6 +176,13 @@ class CircuitRemapper:
 
         ent_inst.qubits = [epr_qubits[1], opr_qubits[1]]
         circ.data.append(ent_inst)
+        if len(deeper_ops) > 0:
+            id = 2
+            for op in deeper_ops:
+                ent_inst = op.copy()
+                ent_inst.qubits = [epr_qubits[1], opr_qubits[id]]
+                circ.data.append(ent_inst)
+                id += 1
 
         circ.h(1)
         circ.measure(1,1)
@@ -188,21 +197,32 @@ class CircuitRemapper:
             
         return new_ops
 
-    def remap_circuit(self):
+    def remap_circuit(self, circuit:QuantumCircuit):
         """
         Remap the circuit for the topology.
         Returns: a distributed circuit over the topology
         """
-        layers = self._circuit_to_layers()
+        layers = self._circuit_to_layers(circuit=circuit)
         distributed_layers = []
+        idx = 0
+        circ_qubits = self.topology.qubits
+        deep_dict = {qubit:0 for qubit in circ_qubits}
+
         for a_layer in layers:
             layer_now = Layer(a_layer,self.topology)
-
             non_local_ops = layer_now.non_local_operations()
             new_layers = [[]]
+           
             if non_local_ops != []:
                 for operation in non_local_ops:
-                    op_replaced = self.replace_nonlocal_control(operation, self.topology)
+                    control, target = operation.qubits[0], operation.qubits[1]
+                    if deep_dict[control] > 0:
+                        deep_dict[control] -= 1
+                        continue
+                    deeper_ops = self.get_deeper_nlcontrol(layers[idx+1:], control, target)
+                    if len(deeper_ops) > 0:
+                        deep_dict[control] += len(deeper_ops)
+                    op_replaced = self.replace_nonlocal_control(operation, self.topology, deeper_ops)
                     new_layers.extend(op_replaced)
             
             local_ops = []
@@ -213,10 +233,47 @@ class CircuitRemapper:
             new_layers[0].extend(local_ops)
             
             distributed_layers.extend(new_layers)
+            idx += 1
 
         dist_circ = self._layer_to_circuit(distributed_layers)
             
         return dist_circ
+
+    @staticmethod
+    def qubit_ops(layers:List[Layer], qubit:Qubit=None):
+        """
+        Get the operations on each qubit
+        Args:
+            layers: list of layers
+        Returns: dictionary of qubit to operations
+        """
+        qubit_ops = []
+        for layer in layers:
+            for op in layer:
+                for a_qubit in op.qubits:
+                    if qubit == a_qubit:
+                        qubit_ops.append(op)
+        return qubit_ops
+
+
+    def get_deeper_nlcontrol(self ,layers, control_qubit:Qubit, target_qubit:Qubit):
+        """
+        Get the deeper control operation on a qubit
+        """
+        control_ops = self.qubit_ops(layers, control_qubit)
+        target_host = self.topology.get_host(target_qubit)
+        ops = []
+        for op in control_ops:
+            if len(op.qubits) == 2 and op.qubits[0] == control_qubit:
+                if self.topology.get_host(op.qubits[1]) == target_host:
+                    ops.append(op)
+                else:
+                    break
+            else:
+                break
+        
+        return ops
+
 
     @staticmethod
     def collate_measurements(sim_results:dict, num_qubits:int):
