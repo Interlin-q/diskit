@@ -41,6 +41,10 @@ class Topology:
         """ Return the epr qubit IDs """
         return self.e_map[host]
 
+    def get_qubit_ids(self, host):
+        """ Return the qubit IDs """
+        return self.q_map[host]
+
 
     
 

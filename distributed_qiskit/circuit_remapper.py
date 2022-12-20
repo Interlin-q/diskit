@@ -164,7 +164,7 @@ class CircuitRemapper:
 
         measure_bits = ClassicalRegister(2, "cat_measure")
         circ = QuantumCircuit(epr_qubits, opr_qubits, measure_bits)
-
+        # print(deeper_ops)
         # Generate EPR pair
         circ.h(0)
         circ.cx(0, 1)
@@ -220,6 +220,7 @@ class CircuitRemapper:
                         deep_dict[control] -= 1
                         continue
                     deeper_ops = self.get_deeper_nlcontrol(layers[idx+1:], control, target)
+                    # deeper_ops = []
                     if len(deeper_ops) > 0:
                         deep_dict[control] += len(deeper_ops)
                     op_replaced = self.replace_nonlocal_control(operation, self.topology, deeper_ops)
@@ -263,10 +264,15 @@ class CircuitRemapper:
         control_ops = self.qubit_ops(layers, control_qubit)
         target_host = self.topology.get_host(target_qubit)
         ops = []
+        track_dict = {qubit:0 for qubit in self.topology.get_qubit_ids(target_host)}
         for op in control_ops:
             if len(op.qubits) == 2 and op.qubits[0] == control_qubit:
                 if self.topology.get_host(op.qubits[1]) == target_host:
-                    ops.append(op)
+                    target_ops = self.qubit_ops(layers, op.qubits[1])
+                    # print('here')
+                    if target_ops[track_dict[op.qubits[1]]] == op:
+                        ops.append(op)
+                        track_dict[op.qubits[1]] += 1
                 else:
                     break
             else:
