@@ -84,7 +84,7 @@ class CircuitRemapper:
         return layers
 
     @staticmethod
-    def _layer_to_circuit(layers: Iterable[List], *, qubits: Iterable[Qubit] = (),
+    def _layer_to_circuit(layers: Iterable[List], qubits: Iterable[Qubit] = (),
                         clbits: Iterable[Clbit] = (),
                         name: Optional[str] = None,
                         global_phase=0,
@@ -203,6 +203,8 @@ class CircuitRemapper:
         Returns: a distributed circuit over the topology
         """
         layers = self._circuit_to_layers(circuit=circuit)
+        qubits = circuit.qubits
+        clbits = circuit.clbits
         distributed_layers = []
         idx = 0
         circ_qubits = self.topology.qubits
@@ -236,7 +238,7 @@ class CircuitRemapper:
             distributed_layers.extend(new_layers)
             idx += 1
 
-        dist_circ = self._layer_to_circuit(distributed_layers)
+        dist_circ = self._layer_to_circuit(distributed_layers, qubits, clbits)
             
         return dist_circ
 
