@@ -42,16 +42,19 @@ class Topology:
         return False
 
     def get_host(self, qubit: str):
-        """Return the host of qubit"""
+        """Return the host of qubit."""
         for host in self.q_hosts:
             if qubit in self.q_map[host]:
                 return host
         return None
 
     def get_epr_id(self, host):
-        """ Return the epr qubit IDs """
+        """Return the epr qubit IDs."""
         return self.e_map[host]
 
     def get_qubit_ids(self, host):
-        """ Return the qubit IDs """
+        """Return the qubit IDs."""
         return self.q_map[host]
+
+if __name__ == "__main__":
+    t = Topology()

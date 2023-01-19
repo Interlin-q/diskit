@@ -3,9 +3,8 @@ The circuit remapper logic.
 """
 from qiskit.circuit import QuantumCircuit
 from qiskit.circuit.quantumcircuitdata import CircuitInstruction
-from qiskit.circuit.quantumregister import QuantumRegister, Qubit
+from qiskit.circuit.quantumregister import Qubit
 from qiskit.circuit.classicalregister import ClassicalRegister, Clbit
-from qiskit.circuit.library.standard_gates.h import *
 from components.layer import Layer
 from components.topology import Topology
 from typing import (
@@ -57,7 +56,7 @@ class CircuitRemapper:
                     levels.append(op_stack[reg_ints[ind]] + 1)
                     if len(layers) < (op_stack[reg_ints[ind]] + 1):
                         layers.append([])
-                    max_pos = max(max_pos, (op_stack[reg_ints[ind]]))                                
+                    max_pos = max(max_pos, (op_stack[reg_ints[ind]]))
                 else:
                     levels.append(op_stack[reg_ints[ind]])
 
@@ -85,10 +84,10 @@ class CircuitRemapper:
 
     @staticmethod
     def _layer_to_circuit(layers: Iterable[List], qubits: Iterable[Qubit] = (),
-                        clbits: Iterable[Clbit] = (),
-                        name: Optional[str] = None,
-                        global_phase=0,
-                        metadata: Optional[dict] = None, ) -> "QuantumCircuit":
+                          clbits: Iterable[Clbit] = (),
+                          name: Optional[str] = None,
+                          global_phase=0,
+                          metadata: Optional[dict] = None, ) -> "QuantumCircuit":
         """Return a circuit from a list of layers.
 
         Args:
@@ -121,9 +120,9 @@ class CircuitRemapper:
                 if not isinstance(instruction, CircuitInstruction):
                     instruction = CircuitInstruction(*instruction)
                 qubits = [qubit for qubit in instruction.qubits if
-                        qubit not in added_qubits and qubit.register not in added_qregs]
+                          qubit not in added_qubits and qubit.register not in added_qregs]
                 clbits = [clbit for clbit in instruction.clbits if
-                        clbit not in added_clbits and clbit.register not in added_cregs]
+                          clbit not in added_clbits and clbit.register not in added_cregs]
                 qregs = [qubit.register for qubit in qubits]
                 cregs = [clbit.register for clbit in clbits]
                 circuit.add_bits(qubits)
@@ -136,18 +135,21 @@ class CircuitRemapper:
                 added_cregs.update(cregs)
                 circuit._append(instruction)
         return circuit
-    
+
     @staticmethod
-    def replace_nonlocal_control(operation:CircuitInstruction, topology:Topology, 
-    deeper_ops:List[CircuitInstruction]=None):
+    def _replace_nonlocal_control(operation: CircuitInstruction,
+                                  topology: Topology,
+                                  deeper_ops: List[CircuitInstruction] = None):
         """
-        Replace the non-local control gates with Cat entanglement gates for a given layer
+        Replace the non-local control gates with Cat entanglement gates for a given layer.
         Args:
             non_local_op: a non-local control gate
+            topology: The network topology.
+            deeper_ops: The list of operations.
         Returns:
             (list): List of new operations to be added in the layer
-        """  
-        
+        """
+
         control_qubit = operation.qubits[0]
         target_qubit = operation.qubits[1]
         control_host = topology.get_host(control_qubit)
@@ -155,7 +157,7 @@ class CircuitRemapper:
         ent_inst = operation.copy()
         epr_control = topology.get_epr_id(control_host)
         epr_target = topology.get_epr_id(target_host)
-        
+
         epr_qubits = [epr_control, epr_target]
         opr_qubits = [control_qubit, target_qubit]
         if len(deeper_ops) > 0:
@@ -168,36 +170,36 @@ class CircuitRemapper:
         # Generate EPR pair
         circ.h(0)
         circ.cx(0, 1)
-        
+
         # cat entanglement
-        circ.cx(2,0)
-        circ.measure(0,0)
+        circ.cx(2, 0)
+        circ.measure(0, 0)
         circ.x(1).c_if(measure_bits[0], 1)
 
         ent_inst.qubits = [epr_qubits[1], opr_qubits[1]]
         circ.data.append(ent_inst)
         if len(deeper_ops) > 0:
-            id = 2
+            ident = 2
             for op in deeper_ops:
                 ent_inst = op.copy()
-                ent_inst.qubits = [epr_qubits[1], opr_qubits[id]]
+                ent_inst.qubits = [epr_qubits[1], opr_qubits[ident]]
                 circ.data.append(ent_inst)
-                id += 1
+                ident += 1
 
         circ.h(1)
-        circ.measure(1,1)
+        circ.measure(1, 1)
         circ.z(2).c_if(measure_bits[1], 1)
-        
+
         circ.reset(epr_qubits)
 
         # Make layers from this circuit
         new_ops = []
         for op in circ.data:
             new_ops.append([op])
-            
+
         return new_ops
 
-    def remap_circuit(self, circuit:QuantumCircuit):
+    def remap_circuit(self, circuit: QuantumCircuit):
         """
         Remap the circuit for the topology.
         Returns: a distributed circuit over the topology
@@ -208,42 +210,42 @@ class CircuitRemapper:
         distributed_layers = []
         idx = 0
         circ_qubits = self.topology.qubits
-        deep_dict = {qubit:0 for qubit in circ_qubits}
+        deep_dict = {qubit: 0 for qubit in circ_qubits}
 
         for a_layer in layers:
-            layer_now = Layer(a_layer,self.topology)
+            layer_now = Layer(a_layer, self.topology)
             non_local_ops = layer_now.non_local_operations()
             new_layers = [[]]
-           
+
             if non_local_ops != []:
                 for operation in non_local_ops:
                     control, target = operation.qubits[0], operation.qubits[1]
                     if deep_dict[control] > 0:
                         deep_dict[control] -= 1
                         continue
-                    deeper_ops = self.get_deeper_nlcontrol(layers[idx+1:], control, target)
+                    deeper_ops = self.get_deeper_nlcontrol(layers[idx + 1:], control, target)
                     # deeper_ops = []
                     if len(deeper_ops) > 0:
                         deep_dict[control] += len(deeper_ops)
-                    op_replaced = self.replace_nonlocal_control(operation, self.topology, deeper_ops)
+                    op_replaced = self._replace_nonlocal_control(operation, self.topology, deeper_ops)
                     new_layers.extend(op_replaced)
-            
+
             local_ops = []
             for operation in a_layer:
                 if operation not in non_local_ops:
                     local_ops.append(operation)
-            
+
             new_layers[0].extend(local_ops)
-            
+
             distributed_layers.extend(new_layers)
             idx += 1
 
         dist_circ = self._layer_to_circuit(distributed_layers, qubits, clbits)
-            
+
         return dist_circ
 
     @staticmethod
-    def qubit_ops(layers:List[Layer], qubit:Qubit=None):
+    def qubit_ops(layers: List[Layer], qubit: Qubit = None):
         """
         Get the operations on each qubit
         Args:
@@ -258,15 +260,14 @@ class CircuitRemapper:
                         qubit_ops.append(op)
         return qubit_ops
 
-
-    def get_deeper_nlcontrol(self ,layers, control_qubit:Qubit, target_qubit:Qubit):
+    def get_deeper_nlcontrol(self, layers, control_qubit: Qubit, target_qubit: Qubit):
         """
-        Get the deeper control operation on a qubit
+        Get the deeper control operation on a qubit.
         """
         control_ops = self.qubit_ops(layers, control_qubit)
         target_host = self.topology.get_host(target_qubit)
         ops = []
-        track_dict = {qubit:0 for qubit in self.topology.get_qubit_ids(target_host)}
+        track_dict = {qubit: 0 for qubit in self.topology.get_qubit_ids(target_host)}
         for op in control_ops:
             if len(op.qubits) == 2 and op.qubits[0] == control_qubit:
                 if self.topology.get_host(op.qubits[1]) == target_host:
@@ -279,14 +280,13 @@ class CircuitRemapper:
                     break
             else:
                 break
-        
+
         return ops
 
-
     @staticmethod
-    def collate_measurements(sim_results:dict, num_qubits:int):
+    def collate_measurements(sim_results: dict, num_qubits: int):
         """
-        Collate the measurements from the simulation results
+        Collate the measurements from the simulation results.
         Args:
             sim_results: simulation results from the simulator
             num_qubits: number of qubits in the circuit
@@ -299,6 +299,5 @@ class CircuitRemapper:
                 sim_dict[new_key] = sim_results[key]
             else:
                 sim_dict[new_key] += sim_results[key]
-        
+
         return sim_dict
-        
