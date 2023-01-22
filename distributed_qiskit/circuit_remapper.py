@@ -19,7 +19,7 @@ class CircuitRemapper:
     The circuit remapper class for remapping a ciruit to a topology.
     """
 
-    def __init__(self, topology):
+    def __init__(self, topology: Topology):
         self.topology = topology
 
     @staticmethod
@@ -301,3 +301,19 @@ class CircuitRemapper:
                 sim_dict[new_key] += sim_results[key]
 
         return sim_dict
+
+    @staticmethod
+    def do_measure_ready(circ: QuantumCircuit, topology: Topology):
+        """
+        Make the circuit is ready for measurement.
+        Args:
+            circ: the circuit to measure
+        Returns: Circuit ready for measurement
+        """
+        n_q = topology.num_qubits()
+        all_qubits = topology.get_all_qubits()
+        measure_bits = ClassicalRegister(n_q, "measure")
+        circ.add_register(measure_bits)
+        circ.measure(all_qubits, measure_bits)
+
+

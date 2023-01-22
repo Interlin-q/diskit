@@ -1,30 +1,52 @@
 """Topology class for mapping distributed quantum computers."""
 from typing import List, Dict, Optional
-
+from qiskit.circuit.quantumregister import QuantumRegister, Qubit
+from qiskit.circuit.exceptions import CircuitError
 
 class Topology:
     """
     Topology class for a distributed architecture.
     """
 
-    def __init__(self, q_map: Dict[str, List[str]], e_map: Dict[str, List[str]] = None):
+    def __init__(self, qmap: Optional[Dict[str, List[str]]] = None):
         """Initialize the topology object"""
-        self.q_map = q_map
-        self.e_map = e_map
-        self.q_hosts = list(q_map.keys())
+        if qmap is None:
+            self._qmap = {}
+            self.emap = None
+            self.q_hosts = None
+            self.qubits = None
+        else:
+            self._qmap = qmap
+            self.emap = self.create_emap()
+            self.q_hosts = list(qmap.keys())
+            self.qubits = []
+            for qubit in qmap.values():
+                self.qubits += qubit
+                
+    def reinitialize(self, qmap: Dict[str, List[str]]):
+        """Reinitialize the topology object by providing a new qmap"""
+        self.emap = self.create_emap()
+        self.q_hosts = list(qmap.keys())
         self.qubits = []
-        for qubit in q_map.values():
+        for qubit in qmap.values():
             self.qubits += qubit
 
-    def add_qpus(self, num_qpus: int):
-        """Helper function for building out the topology. Given a number of QPUs *num_qpus*,
-        create *num_qpus* QPU keys in the q_map"""
-        pass
-
-    def add_qubits_to_qpu(self, qpu: int, num_qubits: int):
-        """Helper function for adding qubits to QPU *qpu*. Given a number of qubits *num_qubits*,
-        create *num_qubits* for QPU *qpu*."""
-        pass
+    def add_qpu(self, qpu: str, num_qubits: int, qreg: str = None, indices: List[int] = None):
+        """Add a QPU to the qmap. *qpu* is the name of the QPU, and *num_qubits* is the number of
+        qubits on the QPU."""
+        if qreg is None:
+            qreg = QuantumRegister(num_qubits, qpu)
+            self.qmap[qpu] = [Qubit(qreg, i) for i in range(num_qubits)]
+            self.reinitialize(self.qmap)
+        elif indices is not None:
+            if len(indices) != num_qubits:
+                raise CircuitError(
+                    "QuantumRegister was provided but with a different number of indices.")
+            self.qmap[qpu] = [Qubit(qreg, i) for i in indices]
+            self.reinitialize(self.qmap)
+        else:
+            raise CircuitError(
+                "QuantumRegister was provided but with no indices.")
 
     def num_qubits(self):
         """Return the total number of qubits in the topology"""
@@ -37,24 +59,77 @@ class Topology:
     def are_adjacent(self, qubit1: str, qubit2: str):
         """Return True if qubit1 and qubit2 are adjacent"""
         for host in self.q_hosts:
-            if qubit1 in self.q_map[host] and qubit2 in self.q_map[host]:
+            if qubit1 in self.qmap[host] and qubit2 in self.qmap[host]:
                 return True
         return False
 
     def get_host(self, qubit: str):
         """Return the host of qubit."""
         for host in self.q_hosts:
-            if qubit in self.q_map[host]:
+            if qubit in self.qmap[host]:
                 return host
         return None
 
     def get_epr_id(self, host):
         """Return the epr qubit IDs."""
-        return self.e_map[host]
+        return self.emap[host]
 
     def get_qubit_ids(self, host):
         """Return the qubit IDs."""
-        return self.q_map[host]
+        return self.qmap[host]
+
+    def get_all_qubits(self):
+        """Return all the qubits in the qmap."""
+        qubits = []
+        for qpu in self.qmap:
+            qubits += self.qmap[qpu]
+        return qubits  
+
+    @property
+    def qmap(self):
+        return self._qmap  
+
+    def remove_qpu(self, qpu: str):
+        """Remove a QPU from the qmap."""
+        self.qmap.pop(qpu)   
+
+    def add_qubit(self, qpu: str, qubit: Qubit):
+        """Add a qubit to a QPU."""
+        self.qmap[qpu].append(qubit) 
+    
+    def create_qmap(self, num_qpus: int, num_qubits: List[int], name: str = "qpu"):
+        """Create a qmap with *num_qpus* QPUs, each with *num_qubits* qubits."""
+        for i in range(num_qpus):
+            self.add_qpu("{}{}".format(name, i), num_qubits[i]) 
+        self.reinitialize(self.qmap)
+    
+    def get_qubits(self, qpu: str):
+        """Return the qubits on a QPU."""
+        return self.qmap[qpu]
+    
+    def get_qpu(self, qubit: Qubit):
+        """Return the QPU of a qubit."""
+        for qpu in self.qmap:
+            if qubit in self.qmap[qpu]:
+                return qpu
+        return None
+    
+    def create_emap(self):
+        """Create an emap from the qmap."""
+        emap = {}
+        for qpu in self.qmap:
+            ereg = QuantumRegister(1, "com_{}".format(qpu))
+            emap[qpu] = Qubit(ereg, 0)
+        return emap
+
+    def get_regs(self):
+        """Return the QuantumRegisters in the qmap."""
+        regs = []
+        for qpu in self.qmap:
+            regs.append(self.qmap[qpu][0].register)
+        return regs        
+
+
 
 if __name__ == "__main__":
     t = Topology()
