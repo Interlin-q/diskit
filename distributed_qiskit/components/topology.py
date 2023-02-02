@@ -3,6 +3,7 @@ from typing import List, Dict, Optional
 from qiskit.circuit.quantumregister import QuantumRegister, Qubit
 from qiskit.circuit.exceptions import CircuitError
 
+
 class Topology:
     """
     Topology class for a distributed architecture.
@@ -22,7 +23,7 @@ class Topology:
             self.qubits = []
             for qubit in qmap.values():
                 self.qubits += qubit
-                
+
     def reinitialize(self, qmap: Dict[str, List[str]]):
         """Reinitialize the topology object by providing a new qmap"""
         self.emap = self.create_emap()
@@ -83,37 +84,37 @@ class Topology:
         qubits = []
         for qpu in self.qmap:
             qubits += self.qmap[qpu]
-        return qubits  
+        return qubits
 
     @property
     def qmap(self):
-        return self._qmap  
+        return self._qmap
 
     def remove_qpu(self, qpu: str):
         """Remove a QPU from the qmap."""
-        self.qmap.pop(qpu)   
+        self.qmap.pop(qpu)
 
     def add_qubit(self, qpu: str, qubit: Qubit):
         """Add a qubit to a QPU."""
-        self.qmap[qpu].append(qubit) 
-    
+        self.qmap[qpu].append(qubit)
+
     def create_qmap(self, num_qpus: int, num_qubits: List[int], name: str = "qpu"):
         """Create a qmap with *num_qpus* QPUs, each with *num_qubits* qubits."""
         for i in range(num_qpus):
-            self.add_qpu("{}{}".format(name, i), num_qubits[i]) 
+            self.add_qpu("{}{}".format(name, i), num_qubits[i])
         self.reinitialize(self.qmap)
-    
+
     def get_qubits(self, qpu: str):
         """Return the qubits on a QPU."""
         return self.qmap[qpu]
-    
+
     def get_qpu(self, qubit: Qubit):
         """Return the QPU of a qubit."""
         for qpu in self.qmap:
             if qubit in self.qmap[qpu]:
                 return qpu
         return None
-    
+
     def create_emap(self):
         """Create an emap from the qmap."""
         emap = {}
@@ -127,8 +128,7 @@ class Topology:
         regs = []
         for qpu in self.qmap:
             regs.append(self.qmap[qpu][0].register)
-        return regs        
-
+        return regs
 
 
 if __name__ == "__main__":

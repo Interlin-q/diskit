@@ -143,7 +143,7 @@ class CircuitRemapper:
         """
         Replace the non-local control gates with Cat entanglement gates for a given layer.
         Args:
-            non_local_op: a non-local control gate
+            operation: a non-local control gate
             topology: The network topology.
             deeper_ops: The list of operations.
         Returns:
@@ -249,7 +249,8 @@ class CircuitRemapper:
         """
         Get the operations on each qubit
         Args:
-            layers: list of layers
+            layers: The list of layers.
+            qubit: The qubit to get the operations for.
         Returns: dictionary of qubit to operations
         """
         qubit_ops = []
@@ -307,7 +308,8 @@ class CircuitRemapper:
         """
         Make the circuit is ready for measurement.
         Args:
-            circ: the circuit to measure
+            circ: the circuit to measure.
+            topology: The network topology.
         Returns: Circuit ready for measurement
         """
         n_q = topology.num_qubits()
@@ -315,5 +317,3 @@ class CircuitRemapper:
         measure_bits = ClassicalRegister(n_q, "measure")
         circ.add_register(measure_bits)
         circ.measure(all_qubits, measure_bits)
-
-
