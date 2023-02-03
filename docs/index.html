@@ -20,7 +20,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Introduction" href="intro.html" /> 
+    <link rel="next" title="Quickstart" href="quick_start.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,9 +38,9 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 
@@ -71,19 +71,33 @@
   <section id="welcome-to-diskit-documentation">
 <h1>Welcome to DisKit documentation!<a class="headerlink" href="#welcome-to-diskit-documentation" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
 </div>
+<ul class="simple">
+<li><p>Quickstate: An overview of how to install the code and get started.</p></li>
+<li><p>Examples: Some examples using the library.</p></li>
+</ul>
+</section>
+<section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h1>
+<p>Distributed quantum computing is a concept that proposes to connect multiple quantum computers in a network to leverage a collection of more, but physically separated, qubits. In order to perform distributed quantum computing, it is necessary to add the addition of classical communication and entanglement distribution so that the control information from one qubit can be applied to another that is located on another quantum computer. For more details on distributed quantum computing, see this blog post: <a class="reference external" href="https://medium.com/&#64;stephen.diadamo/distributed-quantum-computing-1c5d38a34c50">Distributed Quantum Computing: A path to large scale quantum computing</a></p>
+<p>In this project, we aim to validate distributed quantum algorithms using Qiskit. Because Qiskit does not yet come with networking features, we embed a “virtual network topology” into large circuits to mimic distributed quantum computing. The idea is to take a monolithic quantum circuit developed in the Qiskit language and distribute the circuit according to an artificially segmented version of a quantum processor. The inputs to the library are a quantum algorithm written monolithically (i.e., in a single circuit) and a topology parameter that represents the artificial segmentation of the single quantum processor.</p>
+<p>The algorithm takes these two inputs and remaps the Qiskit circuit to the specified segmentation, adding all necessary steps to perform an equivalent distributed quantum circuit. Our algorithm for achieving this is based on the work: <a class="reference external" href="https://ieeexplore.ieee.org/document/9351762">Distributed Quantum Computing and Network Control for Accelerated VQE</a>. The algorithm output is another Qiskit circuit with the equivalent measurement statistics but with all of the additional logic needed to perform a distributed version.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/SEG-QPU.png"><img alt="Segmented QPU" src="_images/SEG-QPU.png" style="width: 500px;" /></a>
+</figure>
+<p>The algorithm proposed in the linked work is not yet optimized, and so we encourage users to contribute by adding other methods of distributing circuits to the library.</p>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="intro.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="quick_start.html" class="btn btn-neutral float-right" title="Quickstart" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
