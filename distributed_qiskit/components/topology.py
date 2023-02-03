@@ -88,6 +88,7 @@ class Topology:
 
     @property
     def qmap(self):
+        """The topology map."""
         return self._qmap
 
     def remove_qpu(self, qpu: str):
@@ -101,7 +102,7 @@ class Topology:
     def create_qmap(self, num_qpus: int, num_qubits: List[int], name: str = "qpu"):
         """Create a qmap with *num_qpus* QPUs, each with *num_qubits* qubits."""
         for i in range(num_qpus):
-            self.add_qpu("{}{}".format(name, i), num_qubits[i])
+            self.add_qpu(f"{name}{i}", num_qubits[i])
         self.reinitialize(self.qmap)
 
     def get_qubits(self, qpu: str):
@@ -119,7 +120,7 @@ class Topology:
         """Create an emap from the qmap."""
         emap = {}
         for qpu in self.qmap:
-            ereg = QuantumRegister(1, "com_{}".format(qpu))
+            ereg = QuantumRegister(1, f"com_{qpu}")
             emap[qpu] = Qubit(ereg, 0)
         return emap
 
