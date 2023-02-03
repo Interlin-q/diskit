@@ -9,6 +9,7 @@ Welcome to DisKit documentation!
 
     quick_start
     examples
+    source
 
 
 - Quickstart: An overview of how to install the code and get started.

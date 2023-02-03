@@ -9,9 +9,10 @@ Welcome to DisKit documentation!
 
     quick_start
     examples
+    source
 
 
-- Quickstate: An overview of how to install the code and get started.
+- Quickstart: An overview of how to install the code and get started.
 - Examples: Some examples using the library.
 
 Introduction
