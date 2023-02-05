@@ -8,9 +8,9 @@ from qiskit.circuit import QuantumCircuit
 from qiskit.circuit.quantumcircuitdata import CircuitInstruction
 from qiskit.circuit.quantumregister import Qubit
 from qiskit.circuit.classicalregister import ClassicalRegister, Clbit
+from qiskit.circuit.exceptions import CircuitError
 from components.layer import Layer        # pylint: disable=import-error
 from components.topology import Topology  # pylint: disable=import-error
-
 
 
 class CircuitRemapper:
@@ -200,8 +200,8 @@ class CircuitRemapper:
 
         return new_ops
 
-    def remap_circuit(self, circuit: QuantumCircuit, decompose:bool = None,
-                                                decompose_list: List[str] = None):
+    def remap_circuit(self, circuit: QuantumCircuit, decompose: bool = None,
+                      decompose_list: List[str] = None):
         """
         Remap the circuit for the topology.
         Returns: a distributed circuit over the topology
@@ -213,9 +213,14 @@ class CircuitRemapper:
 
         if decompose is not None:
             if decompose_list is not None:
-                circuit = self.decompose_ready(circuit, decompose_list)
+                circuit, _ = self._decompose_ready(circuit, decompose_list)
             else:
-                circuit = self.decompose_ready(circuit)
+                circuit, _ = self._decompose_ready(circuit)
+        else:
+            _, incompatible = self._decompose_ready(circuit)
+            if incompatible:
+                raise CircuitError(
+                    "The circuit contains incompatible gates, Please try decompose=True keyword argument.")
 
         layers = self._circuit_to_layers(circuit=circuit)
         qubits = circuit.qubits
@@ -336,7 +341,7 @@ class CircuitRemapper:
         circ.measure(all_qubits, measure_bits)
 
     @staticmethod
-    def decompose_ready(circ: QuantumCircuit, list_of_gates: List[str] = None):
+    def _decompose_ready(circ: QuantumCircuit, list_of_gates: List[str] = None):
         """
         Decompose the circuit into basic gates(1 and 2 qubit gates).
         Args:
@@ -345,17 +350,22 @@ class CircuitRemapper:
         Returns: Decomposed circuit
         """
         num_large_gates = 1
-
+        circ_copy = circ.copy()
+        incompatible_gate_present = False
+        if list_of_gates is None:
+            list_of_gates = []
         while num_large_gates > 0:
             num_large_gates = 0
-            for gate in circ.data:
-                if gate[1] > 2:
+            for gate in circ_copy.data:
+                if len(gate[1]) > 2:
                     num_large_gates += 1
-                    circ = circ.decompose(gate[0].name)
+                    circ_copy = circ_copy.decompose(gate[0].name)
+                    incompatible_gate_present = True
                 elif gate[0].name == 'swap':
                     num_large_gates += 1
-                    circ = circ.decompose(gate)
+                    circ_copy = circ_copy.decompose(gate)
+                    incompatible_gate_present = True
                 elif gate[0].name in list_of_gates:
                     num_large_gates += 1
-                    circ = circ.decompose(gate)
-        return circ
+                    circ_copy = circ_copy.decompose(gate)
+        return circ_copy, incompatible_gate_present
