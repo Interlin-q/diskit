@@ -43,6 +43,7 @@ class Topology:
             if len(indices) != num_qubits:
                 raise CircuitError(
                     "QuantumRegister was provided but with a different number of indices.")
+            qreg = QuantumRegister(num_qubits, qreg)
             self.qmap[qpu] = [Qubit(qreg, i) for i in indices]
             self.reinitialize(self.qmap)
         else:
@@ -75,15 +76,13 @@ class Topology:
         """Return the epr qubit IDs."""
         return self.emap[host]
 
-    def get_qubit_ids(self, host):
-        """Return the qubit IDs."""
-        return self.qmap[host]
-
     def get_all_qubits(self):
         """Return all the qubits in the qmap."""
         qubits = []
         for qpu in self.qmap:
             qubits += self.qmap[qpu]
+        for qpu in self.emap:
+            qubits.append(self.emap[qpu])
         return qubits
 
     @property
@@ -94,10 +93,7 @@ class Topology:
     def remove_qpu(self, qpu: str):
         """Remove a QPU from the qmap."""
         self.qmap.pop(qpu)
-
-    def add_qubit(self, qpu: str, qubit: Qubit):
-        """Add a qubit to a QPU."""
-        self.qmap[qpu].append(qubit)
+        self.reinitialize(self.qmap)
 
     def create_qmap(self, num_qpus: int, num_qubits: List[int], name: str = "qpu"):
         """Create a qmap with *num_qpus* QPUs, each with *num_qubits* qubits."""
@@ -129,6 +125,8 @@ class Topology:
         regs = []
         for qpu in self.qmap:
             regs.append(self.qmap[qpu][0].register)
+        for qpu in self.emap:
+            regs.append(self.emap[qpu].register)
         return regs
 
 

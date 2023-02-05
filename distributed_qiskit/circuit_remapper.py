@@ -1,17 +1,16 @@
-"""
-The circuit remapper logic.
-"""
-from qiskit.circuit import QuantumCircuit
-from qiskit.circuit.quantumcircuitdata import CircuitInstruction
-from qiskit.circuit.quantumregister import Qubit
-from qiskit.circuit.classicalregister import ClassicalRegister, Clbit
-from components.layer import Layer
-from components.topology import Topology
+"""The circuit remapper logic."""
 from typing import (
     Optional,
     List,
     Iterable,
 )
+from qiskit.circuit import QuantumCircuit
+from qiskit.circuit.quantumcircuitdata import CircuitInstruction
+from qiskit.circuit.quantumregister import Qubit
+from qiskit.circuit.classicalregister import ClassicalRegister, Clbit
+from components.layer import Layer        # pylint: disable=import-error
+from components.topology import Topology  # pylint: disable=import-error
+
 
 
 class CircuitRemapper:
@@ -33,7 +32,8 @@ class CircuitRemapper:
         # Assign each bit in the circuit a unique integer
         # to index into op_stack.
         circ = circuit
-        bit_indices = {bit: idx for idx, bit in enumerate(circ.qubits + circ.clbits)}
+        bit_indices = {bit: idx for idx,
+                       bit in enumerate(circ.qubits + circ.clbits)}
 
         # If no bits, return 0
         if not bit_indices:
@@ -95,7 +95,8 @@ class CircuitRemapper:
                 :class:`~qiskit.circuit.Instruction`
         return: A circuit from the layers.
         """
-        circuit = QuantumCircuit(name=name, global_phase=global_phase, metadata=metadata)
+        circuit = QuantumCircuit(
+            name=name, global_phase=global_phase, metadata=metadata)
         added_qubits = set()
         added_clbits = set()
         added_qregs = set()
@@ -133,7 +134,7 @@ class CircuitRemapper:
                 added_clbits.update(clbits)
                 added_qregs.update(qregs)
                 added_cregs.update(cregs)
-                circuit._append(instruction)
+                circuit.append(instruction)
         return circuit
 
     @staticmethod
@@ -161,8 +162,8 @@ class CircuitRemapper:
         epr_qubits = [epr_control, epr_target]
         opr_qubits = [control_qubit, target_qubit]
         if len(deeper_ops) > 0:
-            for op in deeper_ops:
-                opr_qubits.append(op.qubits[1])
+            for opi in deeper_ops:
+                opr_qubits.append(opi.qubits[1])
 
         measure_bits = ClassicalRegister(2, "cat_measure")
         circ = QuantumCircuit(epr_qubits, opr_qubits, measure_bits)
@@ -180,8 +181,8 @@ class CircuitRemapper:
         circ.data.append(ent_inst)
         if len(deeper_ops) > 0:
             ident = 2
-            for op in deeper_ops:
-                ent_inst = op.copy()
+            for opi in deeper_ops:
+                ent_inst = opi.copy()
                 ent_inst.qubits = [epr_qubits[1], opr_qubits[ident]]
                 circ.data.append(ent_inst)
                 ident += 1
@@ -194,8 +195,8 @@ class CircuitRemapper:
 
         # Make layers from this circuit
         new_ops = []
-        for op in circ.data:
-            new_ops.append([op])
+        for opi in circ.data:
+            new_ops.append([opi])
 
         return new_ops
 
@@ -203,6 +204,10 @@ class CircuitRemapper:
         """
         Remap the circuit for the topology.
         Returns: a distributed circuit over the topology
+        Args:
+            circuit: The circuit to be distributed.
+        Returns:
+            A distributed circuit over the topology.
         """
         layers = self._circuit_to_layers(circuit=circuit)
         qubits = circuit.qubits
@@ -217,17 +222,19 @@ class CircuitRemapper:
             non_local_ops = layer_now.non_local_operations()
             new_layers = [[]]
 
-            if non_local_ops != []:
+            if non_local_ops not in [[], None]:
                 for operation in non_local_ops:
                     control, target = operation.qubits[0], operation.qubits[1]
                     if deep_dict[control] > 0:
                         deep_dict[control] -= 1
                         continue
-                    deeper_ops = self.get_deeper_nlcontrol(layers[idx + 1:], control, target)
+                    deeper_ops = self._get_deeper_nlcontrol(
+                        layers[idx + 1:], control, target)
                     # deeper_ops = []
                     if len(deeper_ops) > 0:
                         deep_dict[control] += len(deeper_ops)
-                    op_replaced = self._replace_nonlocal_control(operation, self.topology, deeper_ops)
+                    op_replaced = self._replace_nonlocal_control(
+                        operation, self.topology, deeper_ops)
                     new_layers.extend(op_replaced)
 
             local_ops = []
@@ -245,7 +252,7 @@ class CircuitRemapper:
         return dist_circ
 
     @staticmethod
-    def qubit_ops(layers: List[Layer], qubit: Qubit = None):
+    def _qubit_ops(layers: List[Layer], qubit: Qubit = None):
         """
         Get the operations on each qubit
         Args:
@@ -255,28 +262,29 @@ class CircuitRemapper:
         """
         qubit_ops = []
         for layer in layers:
-            for op in layer:
-                for a_qubit in op.qubits:
+            for opi in layer:
+                for a_qubit in opi.qubits:
                     if qubit == a_qubit:
-                        qubit_ops.append(op)
+                        qubit_ops.append(opi)
         return qubit_ops
 
-    def get_deeper_nlcontrol(self, layers, control_qubit: Qubit, target_qubit: Qubit):
+    def _get_deeper_nlcontrol(self, layers, control_qubit: Qubit, target_qubit: Qubit):
         """
         Get the deeper control operation on a qubit.
         """
-        control_ops = self.qubit_ops(layers, control_qubit)
+        control_ops = self._qubit_ops(layers, control_qubit)
         target_host = self.topology.get_host(target_qubit)
         ops = []
-        track_dict = {qubit: 0 for qubit in self.topology.get_qubit_ids(target_host)}
-        for op in control_ops:
-            if len(op.qubits) == 2 and op.qubits[0] == control_qubit:
-                if self.topology.get_host(op.qubits[1]) == target_host:
-                    target_ops = self.qubit_ops(layers, op.qubits[1])
+        track_dict = {
+            qubit: 0 for qubit in self.topology.get_qubits(target_host)}
+        for opi in control_ops:
+            if len(opi.qubits) == 2 and opi.qubits[0] == control_qubit:
+                if self.topology.get_host(opi.qubits[1]) == target_host:
+                    target_ops = self._qubit_ops(layers, opi.qubits[1])
                     # print('here')
-                    if target_ops[track_dict[op.qubits[1]]] == op:
-                        ops.append(op)
-                        track_dict[op.qubits[1]] += 1
+                    if target_ops[track_dict[opi.qubits[1]]] == opi:
+                        ops.append(opi)
+                        track_dict[opi.qubits[1]] += 1
                 else:
                     break
             else:
@@ -296,7 +304,8 @@ class CircuitRemapper:
         sim_dict = {}
         for key in sim_results.keys():
             new_key = key[0:num_qubits]
-            if new_key not in sim_dict.keys():
+            dict_keys = sim_dict.keys()
+            if new_key not in dict_keys:
                 sim_dict[new_key] = sim_results[key]
             else:
                 sim_dict[new_key] += sim_results[key]
@@ -317,3 +326,28 @@ class CircuitRemapper:
         measure_bits = ClassicalRegister(n_q, "measure")
         circ.add_register(measure_bits)
         circ.measure(all_qubits, measure_bits)
+
+    @staticmethod
+    def decompose_ready(circ: QuantumCircuit, list_of_gates: List[str] = None):
+        """
+        Decompose the circuit into basic gates(1 and 2 qubit gates).
+        Args:
+            circ: the circuit to decompose.
+            topology: The network topology.
+        Returns: Decomposed circuit
+        """
+        num_large_gates = 1
+
+        while num_large_gates > 0:
+            num_large_gates = 0
+            for gate in circ.data:
+                if gate[1] > 2:
+                    num_large_gates += 1
+                    circ = circ.decompose(gate[0].name)
+                elif gate[0].name == 'swap':
+                    num_large_gates += 1
+                    circ = circ.decompose(gate)
+                elif gate[0].name in list_of_gates:
+                    num_large_gates += 1
+                    circ = circ.decompose(gate)
+        return circ

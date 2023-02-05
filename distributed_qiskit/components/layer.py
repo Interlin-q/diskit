@@ -1,3 +1,4 @@
+"""Layer object which is a collection of operations to be applied on the qubits in the system."""
 from typing import List, Optional
 from qiskit.circuit.quantumcircuitdata import CircuitInstruction
 from .topology import Topology
@@ -8,12 +9,14 @@ class Layer:
     Layer object which is a collection of operations to be applied on the qubits in the system.
     """
 
-    def __init__(self, operations: Optional[List[CircuitInstruction]] = None, topology: Topology = None):
+    def __init__(self, operations: Optional[List[CircuitInstruction]] = None,
+    topology: Topology = None):
         """
         Returns the important things for a layer in a quantum circuit.
 
         Args:
-            operations (list): List of Operation objects, which contains information about the operation to be
+            operations (list): List of Operation objects, which contains
+            information about the operation to be
             performed on the quantum circuit
         """
 
