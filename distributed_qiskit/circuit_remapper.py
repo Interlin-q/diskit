@@ -200,7 +200,8 @@ class CircuitRemapper:
 
         return new_ops
 
-    def remap_circuit(self, circuit: QuantumCircuit):
+    def remap_circuit(self, circuit: QuantumCircuit, decompose:bool = None,
+                                                decompose_list: List[str] = None):
         """
         Remap the circuit for the topology.
         Returns: a distributed circuit over the topology
@@ -209,6 +210,13 @@ class CircuitRemapper:
         Returns:
             A distributed circuit over the topology.
         """
+
+        if decompose is not None:
+            if decompose_list is not None:
+                circuit = self.decompose_ready(circuit, decompose_list)
+            else:
+                circuit = self.decompose_ready(circuit)
+
         layers = self._circuit_to_layers(circuit=circuit)
         qubits = circuit.qubits
         clbits = circuit.clbits
