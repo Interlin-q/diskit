@@ -1,0 +1,192 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "65935fec",
+   "metadata": {
+    "ExecuteTime": {
+     "end_time": "2023-02-03T08:41:58.274070Z",
+     "start_time": "2023-02-03T08:41:58.256821Z"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "from distkit.components.layer import *\n",
+    "import warnings\n",
+    "\n",
+    "warnings.filterwarnings(\"ignore\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2c98cce1",
+   "metadata": {},
+   "source": [
+    "### Example to create a topology"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "d25e7e96",
+   "metadata": {
+    "ExecuteTime": {
+     "end_time": "2023-02-03T08:41:59.584025Z",
+     "start_time": "2023-02-03T08:41:59.556730Z"
+    }
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "({'sys0': [Qubit(QuantumRegister(2, 'sys0'), 0),\n",
+       "   Qubit(QuantumRegister(2, 'sys0'), 1)],\n",
+       "  'sys1': [Qubit(QuantumRegister(3, 'sys1'), 0),\n",
+       "   Qubit(QuantumRegister(3, 'sys1'), 1),\n",
+       "   Qubit(QuantumRegister(3, 'sys1'), 2)],\n",
+       "  'sys2': [Qubit(QuantumRegister(3, 'sys2'), 0),\n",
+       "   Qubit(QuantumRegister(3, 'sys2'), 1),\n",
+       "   Qubit(QuantumRegister(3, 'sys2'), 2)]},\n",
+       " {'sys0': Qubit(QuantumRegister(1, 'com_sys0'), 0),\n",
+       "  'sys1': Qubit(QuantumRegister(1, 'com_sys1'), 0),\n",
+       "  'sys2': Qubit(QuantumRegister(1, 'com_sys2'), 0)})"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "circuit_topo = Topology()\n",
+    "circuit_topo.create_qmap(3, [2, 3, 3], \"sys\")\n",
+    "circuit_topo.qmap, circuit_topo.emap"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "169d787d",
+   "metadata": {},
+   "source": [
+    "In-built functions to support actions in topology class"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "afe696b3",
+   "metadata": {
+    "ExecuteTime": {
+     "end_time": "2023-02-03T08:42:00.214160Z",
+     "start_time": "2023-02-03T08:42:00.197002Z"
+    }
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Total Number of Qubits in Topology :  8\n",
+      "Total Number of QPUs in Topology:  3\n",
+      "Qubit(QuantumRegister(3, 'sys1'), 2) and Qubit(QuantumRegister(3, 'sys2'), 1) are not adjacent\n",
+      "Qubit: Qubit(QuantumRegister(2, 'sys0'), 0) --------- Host: sys0\n",
+      "Qubit: Qubit(QuantumRegister(2, 'sys0'), 1) --------- Host: sys0\n",
+      "Qubit: Qubit(QuantumRegister(3, 'sys1'), 0) --------- Host: sys1\n",
+      "Qubit: Qubit(QuantumRegister(3, 'sys1'), 1) --------- Host: sys1\n",
+      "Qubit: Qubit(QuantumRegister(3, 'sys1'), 2) --------- Host: sys1\n",
+      "Qubit: Qubit(QuantumRegister(3, 'sys2'), 0) --------- Host: sys2\n",
+      "Qubit: Qubit(QuantumRegister(3, 'sys2'), 1) --------- Host: sys2\n",
+      "Qubit: Qubit(QuantumRegister(3, 'sys2'), 2) --------- Host: sys2\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(\"Total Number of Qubits in Topology : \", circuit_topo.num_qubits())\n",
+    "print(\"Total Number of QPUs in Topology: \", circuit_topo.num_hosts())\n",
+    "\n",
+    "Qubit1 = circuit_topo.qmap[\"sys1\"][2]\n",
+    "Qubit2 = circuit_topo.qmap[\"sys2\"][1]\n",
+    "print(\"{} and {} are adjacent\".format(Qubit1, Qubit2)\n",
+    "      if circuit_topo.are_adjacent(Qubit1, Qubit2) else\n",
+    "      \"{} and {} are not adjacent\".format(Qubit1, Qubit2))\n",
+    "\n",
+    "for qubit in circuit_topo.qubits:\n",
+    "    print(\"Qubit: {} --------- Host: {}\".format(qubit, circuit_topo.get_host(qubit)))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "e1a8ac9c",
+   "metadata": {
+    "ExecuteTime": {
+     "end_time": "2023-02-05T12:47:27.459095Z",
+     "start_time": "2023-02-05T12:47:21.275415Z"
+    }
+   },
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "C:\\Users\\anura\\anaconda3\\lib\\site-packages\\numpy\\_distributor_init.py:32: UserWarning: loaded more than 1 DLL from .libs:\n",
+      "C:\\Users\\anura\\anaconda3\\lib\\site-packages\\numpy\\.libs\\libopenblas.NOIJJG62EMASZI6NYURL6JBKM4EVBGM7.gfortran-win_amd64.dll\n",
+      "C:\\Users\\anura\\anaconda3\\lib\\site-packages\\numpy\\.libs\\libopenblas.XWYDX2IKJW2NMTWSFYNGFUWKQU3LYTCZ.gfortran-win_amd64.dll\n",
+      "  stacklevel=1)\n"
+     ]
+    },
+    {
+     "data": {
+      "text/html": [
+       "<h3>Version Information</h3><table><tr><th>Qiskit Software</th><th>Version</th></tr><tr><td><code>qiskit-terra</code></td><td>0.21.2</td></tr><tr><td><code>qiskit-aer</code></td><td>0.11.0</td></tr><tr><td><code>qiskit-ignis</code></td><td>0.3.3</td></tr><tr><td><code>qiskit-ibmq-provider</code></td><td>0.19.2</td></tr><tr><td><code>qiskit</code></td><td>0.38.0</td></tr><tr><th>System information</th></tr><tr><td>Python version</td><td>3.7.10</td></tr><tr><td>Python compiler</td><td>MSC v.1916 64 bit (AMD64)</td></tr><tr><td>Python build</td><td>default, Feb 26 2021 13:06:18</td></tr><tr><td>OS</td><td>Windows</td></tr><tr><td>CPUs</td><td>4</td></tr><tr><td>Memory (Gb)</td><td>15.438713073730469</td></tr><tr><td colspan='2'>Sun Feb 05 18:17:27 2023 India Standard Time</td></tr></table>"
+      ],
+      "text/plain": [
+       "<IPython.core.display.HTML object>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "import qiskit.tools.jupyter\n",
+    "% qiskit_version_table"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.10"
+  },
+  "toc": {
+   "base_numbering": 1,
+   "nav_menu": {},
+   "number_sections": true,
+   "sideBar": true,
+   "skip_h1_title": false,
+   "title_cell": "Table of Contents",
+   "title_sidebar": "Contents",
+   "toc_cell": false,
+   "toc_position": {},
+   "toc_section_display": true,
+   "toc_window_display": false
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

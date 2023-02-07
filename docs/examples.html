@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Examples &mdash; DisKit 0.1 documentation</title>
+  <title>Examples &mdash; DistKit 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,10 +17,11 @@
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Components" href="source.html" />
+    <link rel="next" title="Example to create a topology" href="examples/Topology.html" />
     <link rel="prev" title="Quickstart" href="quick_start.html" /> 
 </head>
 
@@ -29,7 +30,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> DisKit
+            <a href="index.html" class="icon icon-home"> DistKit
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -42,38 +43,47 @@
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quickstart</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/Topology.html">Example to create a topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/CNOT.html">Create a Distributed Circuit for a CNOT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/CNOT.html#The-case-of-higher-order-gates">The case of higher order gates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/QFT.html">Create a Distributed Circuit for performing Quantum Fourier Transform</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/QFT.html#For-2-processor-with-4-qubits">For 2 processor with 4 qubits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/QFT.html#For-4-processors-with-total-16-qubits">For 4 processors with total 16 qubits</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Shors.html">Distribute Shor’s Algorithm</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="source.html">Components</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="components/layer.html">Layer</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="components/layer.html#distributed_qiskit.components.layer.Layer"><code class="docutils literal notranslate"><span class="pre">Layer</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="components/layer.html#distributed_qiskit.components.layer.Layer.add_operation"><code class="docutils literal notranslate"><span class="pre">Layer.add_operation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/layer.html#distributed_qiskit.components.layer.Layer.add_operations"><code class="docutils literal notranslate"><span class="pre">Layer.add_operations()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/layer.html#distributed_qiskit.components.layer.Layer.non_local_operations"><code class="docutils literal notranslate"><span class="pre">Layer.non_local_operations()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/layer.html#distributed_qiskit.components.layer.Layer.operations"><code class="docutils literal notranslate"><span class="pre">Layer.operations</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/layer.html#distributed_qiskit.components.layer.Layer.remove_operation"><code class="docutils literal notranslate"><span class="pre">Layer.remove_operation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/layer.html#distkit.components.layer.Layer"><code class="docutils literal notranslate"><span class="pre">Layer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="components/layer.html#distkit.components.layer.Layer.add_operation"><code class="docutils literal notranslate"><span class="pre">Layer.add_operation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/layer.html#distkit.components.layer.Layer.add_operations"><code class="docutils literal notranslate"><span class="pre">Layer.add_operations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/layer.html#distkit.components.layer.Layer.non_local_operations"><code class="docutils literal notranslate"><span class="pre">Layer.non_local_operations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/layer.html#distkit.components.layer.Layer.operations"><code class="docutils literal notranslate"><span class="pre">Layer.operations</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/layer.html#distkit.components.layer.Layer.remove_operation"><code class="docutils literal notranslate"><span class="pre">Layer.remove_operation()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="components/topology.html">Topology</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology"><code class="docutils literal notranslate"><span class="pre">Topology</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology.add_qpu"><code class="docutils literal notranslate"><span class="pre">Topology.add_qpu()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology.add_qubit"><code class="docutils literal notranslate"><span class="pre">Topology.add_qubit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology.are_adjacent"><code class="docutils literal notranslate"><span class="pre">Topology.are_adjacent()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology.create_emap"><code class="docutils literal notranslate"><span class="pre">Topology.create_emap()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology.create_qmap"><code class="docutils literal notranslate"><span class="pre">Topology.create_qmap()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology.get_all_qubits"><code class="docutils literal notranslate"><span class="pre">Topology.get_all_qubits()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology.get_epr_id"><code class="docutils literal notranslate"><span class="pre">Topology.get_epr_id()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology.get_host"><code class="docutils literal notranslate"><span class="pre">Topology.get_host()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology.get_qpu"><code class="docutils literal notranslate"><span class="pre">Topology.get_qpu()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology.get_qubit_ids"><code class="docutils literal notranslate"><span class="pre">Topology.get_qubit_ids()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology.get_qubits"><code class="docutils literal notranslate"><span class="pre">Topology.get_qubits()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology.get_regs"><code class="docutils literal notranslate"><span class="pre">Topology.get_regs()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology.num_hosts"><code class="docutils literal notranslate"><span class="pre">Topology.num_hosts()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology.num_qubits"><code class="docutils literal notranslate"><span class="pre">Topology.num_qubits()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology.qmap"><code class="docutils literal notranslate"><span class="pre">Topology.qmap</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology.reinitialize"><code class="docutils literal notranslate"><span class="pre">Topology.reinitialize()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distributed_qiskit.components.topology.Topology.remove_qpu"><code class="docutils literal notranslate"><span class="pre">Topology.remove_qpu()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/topology.html#distkit.components.topology.Topology"><code class="docutils literal notranslate"><span class="pre">Topology</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distkit.components.topology.Topology.add_qpu"><code class="docutils literal notranslate"><span class="pre">Topology.add_qpu()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distkit.components.topology.Topology.are_adjacent"><code class="docutils literal notranslate"><span class="pre">Topology.are_adjacent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distkit.components.topology.Topology.create_emap"><code class="docutils literal notranslate"><span class="pre">Topology.create_emap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distkit.components.topology.Topology.create_qmap"><code class="docutils literal notranslate"><span class="pre">Topology.create_qmap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distkit.components.topology.Topology.get_all_qubits"><code class="docutils literal notranslate"><span class="pre">Topology.get_all_qubits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distkit.components.topology.Topology.get_epr_id"><code class="docutils literal notranslate"><span class="pre">Topology.get_epr_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distkit.components.topology.Topology.get_host"><code class="docutils literal notranslate"><span class="pre">Topology.get_host()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distkit.components.topology.Topology.get_qpu"><code class="docutils literal notranslate"><span class="pre">Topology.get_qpu()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distkit.components.topology.Topology.get_qubits"><code class="docutils literal notranslate"><span class="pre">Topology.get_qubits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distkit.components.topology.Topology.get_regs"><code class="docutils literal notranslate"><span class="pre">Topology.get_regs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distkit.components.topology.Topology.num_hosts"><code class="docutils literal notranslate"><span class="pre">Topology.num_hosts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distkit.components.topology.Topology.num_qubits"><code class="docutils literal notranslate"><span class="pre">Topology.num_qubits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distkit.components.topology.Topology.qmap"><code class="docutils literal notranslate"><span class="pre">Topology.qmap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distkit.components.topology.Topology.reinitialize"><code class="docutils literal notranslate"><span class="pre">Topology.reinitialize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#distkit.components.topology.Topology.remove_qpu"><code class="docutils literal notranslate"><span class="pre">Topology.remove_qpu()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -88,7 +98,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">DisKit</a>
+          <a href="index.html">DistKit</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -106,17 +116,51 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="examples">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="examples">
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/Topology.html">Example to create a topology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/CNOT.html">Create a Distributed Circuit for a CNOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/CNOT.html#The-case-of-higher-order-gates">The case of higher order gates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/QFT.html">Create a Distributed Circuit for performing Quantum Fourier Transform</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/QFT.html#For-2-processor-with-4-qubits">For 2 processor with 4 qubits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/QFT.html#For-4-processors-with-total-16-qubits">For 4 processors with total 16 qubits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Shors.html">Distribute Shor’s Algorithm</a></li>
+</ul>
+</div>
 </section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="quick_start.html" class="btn btn-neutral float-left" title="Quickstart" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="source.html" class="btn btn-neutral float-right" title="Components" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

@@ -9,8 +9,7 @@ from qiskit.circuit.quantumcircuitdata import CircuitInstruction
 from qiskit.circuit.quantumregister import Qubit
 from qiskit.circuit.classicalregister import ClassicalRegister, Clbit
 from qiskit.circuit.exceptions import CircuitError
-from components.layer import Layer        # pylint: disable=import-error
-from components.topology import Topology  # pylint: disable=import-error
+from distkit.components import Layer, Topology
 
 
 class CircuitRemapper:
@@ -33,7 +32,7 @@ class CircuitRemapper:
         # to index into op_stack.
         circ = circuit
         bit_indices = {bit: idx for idx,
-                       bit in enumerate(circ.qubits + circ.clbits)}
+        bit in enumerate(circ.qubits + circ.clbits)}
 
         # If no bits, return 0
         if not bit_indices:

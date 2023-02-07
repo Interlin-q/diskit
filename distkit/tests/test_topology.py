@@ -1,10 +1,10 @@
 """Test Cases for Topology Module (Test Succeeded for all unit methods)"""
 
-
 import sys
 from qiskit.circuit.quantumregister import QuantumRegister, Qubit
+
 sys.path.append("..")
-from components.topology import Topology  # pylint: disable=import-error, wrong-import-position
+from distributed_qiskit.components.topology import Topology  # pylint: disable=import-error, wrong-import-position
 
 
 class TestClass:
@@ -59,7 +59,7 @@ class TestClass:
         """
         self.circuit_topo.reinitialize({"sys0": [Qubit(QuantumRegister(2, 'sys0'), 0), Qubit(
             QuantumRegister(2, 'sys0'), 1)], "sys1": [Qubit(QuantumRegister(3, 'sys1'), 0), Qubit(
-                QuantumRegister(3, 'sys1'), 1), Qubit(QuantumRegister(3, 'sys1'), 2)]})
+            QuantumRegister(3, 'sys1'), 1), Qubit(QuantumRegister(3, 'sys1'), 2)]})
         assert self.circuit_topo.qmap["sys0"] == [Qubit(QuantumRegister(2, 'sys0'), 0), Qubit(
             QuantumRegister(2, 'sys0'), 1)]
         assert self.circuit_topo.qmap["sys1"] == [Qubit(QuantumRegister(3, 'sys1'), 0), Qubit(
@@ -125,4 +125,4 @@ class TestClass:
         """
         assert self.circuit_topo.get_regs() == [QuantumRegister(2, 'sys0'), QuantumRegister(
             3, 'sys2'), QuantumRegister(3, "test_name"), QuantumRegister(
-                1, 'com_sys0'), QuantumRegister(1, 'com_sys2'), QuantumRegister(1, 'com_sys3')]
+            1, 'com_sys0'), QuantumRegister(1, 'com_sys2'), QuantumRegister(1, 'com_sys3')]

@@ -1,4 +1,4 @@
-Welcome to DisKit documentation!
+Welcome to DistKit documentation!
 ================================
 
 
