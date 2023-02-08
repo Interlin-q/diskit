@@ -4,12 +4,14 @@ from typing import (
     List,
     Iterable,
 )
+import time
 from qiskit.circuit import QuantumCircuit
 from qiskit.circuit.quantumcircuitdata import CircuitInstruction
 from qiskit.circuit.quantumregister import Qubit
 from qiskit.circuit.classicalregister import ClassicalRegister, Clbit
 from qiskit.circuit.exceptions import CircuitError
-from distkit.components import Layer, Topology
+from qiskit import transpile
+from components import Layer, Topology
 
 
 class CircuitRemapper:
@@ -32,7 +34,7 @@ class CircuitRemapper:
         # to index into op_stack.
         circ = circuit
         bit_indices = {bit: idx for idx,
-        bit in enumerate(circ.qubits + circ.clbits)}
+                       bit in enumerate(circ.qubits + circ.clbits)}
 
         # If no bits, return 0
         if not bit_indices:
@@ -216,7 +218,8 @@ class CircuitRemapper:
             else:
                 circuit, _ = self._decompose_ready(circuit)
         else:
-            _, incompatible = self._decompose_ready(circuit)
+            _, incompatible = self._decompose_ready(
+                circuit, do_decompose=False)
             if incompatible:
                 raise CircuitError(
                     "The circuit contains incompatible gates, Please try decompose=True keyword argument.")
@@ -340,7 +343,8 @@ class CircuitRemapper:
         circ.measure(all_qubits, measure_bits)
 
     @staticmethod
-    def _decompose_ready(circ: QuantumCircuit, list_of_gates: List[str] = None):
+    def _decompose_ready(circ: QuantumCircuit, list_of_gates: List[str] = None, 
+                                                        do_decompose: bool = True):
         """
         Decompose the circuit into basic gates(1 and 2 qubit gates).
         Args:
@@ -348,6 +352,8 @@ class CircuitRemapper:
             topology: The network topology.
         Returns: Decomposed circuit
         """
+        timeout = time.time() + 60   # 1 minute from now
+
         num_large_gates = 1
         circ_copy = circ.copy()
         incompatible_gate_present = False
@@ -358,13 +364,28 @@ class CircuitRemapper:
             for gate in circ_copy.data:
                 if len(gate[1]) > 2:
                     num_large_gates += 1
-                    circ_copy = circ_copy.decompose(gate[0].name)
                     incompatible_gate_present = True
+                    if do_decompose is False:
+                        break
+                    circ_copy = circ_copy.decompose(gate[0].name)
                 elif gate[0].name == 'swap':
                     num_large_gates += 1
-                    circ_copy = circ_copy.decompose(gate)
                     incompatible_gate_present = True
+                    if do_decompose is False:
+                        break
+                    circ_copy = circ_copy.decompose(gate)
                 elif gate[0].name in list_of_gates:
                     num_large_gates += 1
                     circ_copy = circ_copy.decompose(gate)
+                if time.time() > timeout:
+                    break
+            if do_decompose is False and num_large_gates > 0:
+                break
+            if do_decompose is True and time.time() > timeout:
+                print("Single level decomposition cutoff of 1 minute reached.",
+                "Performing transpilation with basis gates: cx, u1, u2, u3, id")
+                circ_copy = transpile(circ_copy, basis_gates=[
+                                      'cx', 'u1', 'u2', 'u3', 'id'])
+                break
+
         return circ_copy, incompatible_gate_present
