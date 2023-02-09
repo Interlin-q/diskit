@@ -10,7 +10,7 @@ class Layer:
     """
 
     def __init__(self, operations: Optional[List[CircuitInstruction]] = None,
-    topology: Topology = None):
+                 topology: Topology = None):
         """
         Returns the important things for a layer in a quantum circuit.
 

@@ -2,15 +2,12 @@
  "cells": [
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 2,
    "id": "acc09a4e",
    "metadata": {
     "ExecuteTime": {
-     "end_time": "2023-02-05T16:41:50.453009Z",
-     "start_time": "2023-02-05T16:41:46.726964Z"
-    },
-    "pycharm": {
-     "is_executing": true
+     "end_time": "2023-02-08T04:02:05.596059Z",
+     "start_time": "2023-02-08T04:02:05.365935Z"
     }
    },
    "outputs": [],
@@ -44,28 +41,20 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 2,
+   "execution_count": 3,
    "id": "d9a43a37",
    "metadata": {
     "ExecuteTime": {
-     "end_time": "2023-02-05T16:41:50.493015Z",
-     "start_time": "2023-02-05T16:41:50.453009Z"
+     "end_time": "2023-02-08T04:02:06.285942Z",
+     "start_time": "2023-02-08T04:02:06.266115Z"
     }
    },
    "outputs": [
     {
      "data": {
-      "text/plain": [
-       "({'sys_cnot0': [Qubit(QuantumRegister(2, 'sys_cnot0'), 0),\n",
-       "   Qubit(QuantumRegister(2, 'sys_cnot0'), 1)],\n",
-       "  'sys_cnot1': [Qubit(QuantumRegister(3, 'sys_cnot1'), 0),\n",
-       "   Qubit(QuantumRegister(3, 'sys_cnot1'), 1),\n",
-       "   Qubit(QuantumRegister(3, 'sys_cnot1'), 2)]},\n",
-       " {'sys_cnot0': Qubit(QuantumRegister(1, 'com_sys_cnot0'), 0),\n",
-       "  'sys_cnot1': Qubit(QuantumRegister(1, 'com_sys_cnot1'), 0)})"
-      ]
+      "text/plain": "({'sys_cnot0': [Qubit(QuantumRegister(2, 'sys_cnot0'), 0),\n   Qubit(QuantumRegister(2, 'sys_cnot0'), 1)],\n  'sys_cnot1': [Qubit(QuantumRegister(3, 'sys_cnot1'), 0),\n   Qubit(QuantumRegister(3, 'sys_cnot1'), 1),\n   Qubit(QuantumRegister(3, 'sys_cnot1'), 2)]},\n {'sys_cnot0': Qubit(QuantumRegister(1, 'com_sys_cnot0'), 0),\n  'sys_cnot1': Qubit(QuantumRegister(1, 'com_sys_cnot1'), 0)})"
      },
-     "execution_count": 2,
+     "execution_count": 3,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -509,22 +498,6 @@
    "source": [
     "dist_circ = remapper.remap_circuit(qc, decompose=True)\n",
     "dist_circ.draw(output='mpl')"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "d32650cd",
-   "metadata": {
-    "ExecuteTime": {
-     "end_time": "2023-02-05T16:42:03.070242Z",
-     "start_time": "2023-02-05T16:42:03.070242Z"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "import qiskit.tools.jupyter\n",
-    "%qiskit_version_table"
    ]
   }
  ],

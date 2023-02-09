@@ -2,15 +2,12 @@
  "cells": [
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 1,
    "id": "582ad4a5",
    "metadata": {
     "ExecuteTime": {
      "end_time": "2023-02-05T12:51:58.025910Z",
      "start_time": "2023-02-05T12:51:54.081461Z"
-    },
-    "pycharm": {
-     "is_executing": true
     }
    },
    "outputs": [],
@@ -18,7 +15,7 @@
     "from distkit.circuit_remapper import *\n",
     "from distkit.components.layer import *\n",
     "from qiskit import assemble, Aer\n",
-    "from qiskit.visualization import plot_bloch_multivector\n",
+    "from qiskit.visualization import plot_histogram, plot_bloch_multivector, plot_state_qsphere\n",
     "import numpy as np\n",
     "import warnings\n",
     "\n",
@@ -52,18 +49,17 @@
     "    n -= 1\n",
     "    circuit.h(n)\n",
     "    for qubit in range(n):\n",
-    "        circuit.cp(np.pi / 2 ** (n - qubit), qubit, n)\n",
-    "    qft_rotations(circuit, n)  # recursion call\n",
-    "\n",
-    "\n",
+    "        circuit.cp(np.pi/2**(n-qubit), qubit, n)\n",
+    "    qft_rotations(circuit, n) # recursion call\n",
+    "    \n",
     "def swap_registers(circuit, n):\n",
     "    \"\"\"Swap Registers as per QFT scheme\"\"\"\n",
-    "    for qubit in range(n // 2):\n",
-    "        circuit.swap(qubit, n - qubit - 1)\n",
+    "    for qubit in range(n//2):\n",
+    "        circuit.swap(qubit, n-qubit-1)\n",
     "    return circuit\n",
     "\n",
     "\n",
-    "def qft(circuit, n, transpile_swap=False):\n",
+    "def qft(circuit, n, transpile_swap = False):\n",
     "    \"\"\"QFT on the first n qubits in circuit\"\"\"\n",
     "    qft_rotations(circuit, n)\n",
     "    swap_registers(circuit, n)\n",
@@ -123,7 +119,7 @@
    ],
    "source": [
     "circuit_topo = Topology()\n",
-    "circuit_topo.create_qmap(2, [2, 2], \"sys_qft\")\n",
+    "circuit_topo.create_qmap(2, [2, 2],\"sys_qft\")\n",
     "circuit_topo.qmap, circuit_topo.emap"
    ]
   },
@@ -319,7 +315,7 @@
    ],
    "source": [
     "circuit_topo = Topology()\n",
-    "circuit_topo.create_qmap(4, [2, 3, 4, 1], \"sys_qft\")\n",
+    "circuit_topo.create_qmap(4, [2, 3, 4, 1],\"sys_qft\")\n",
     "circuit_topo.qmap, circuit_topo.emap"
    ]
   },
@@ -431,7 +427,6 @@
    "outputs": [],
    "source": [
     "from qiskit.quantum_info import partial_trace\n",
-    "\n",
     "sim = Aer.get_backend('aer_simulator')"
    ]
   },
@@ -465,7 +460,7 @@
     "qobj = assemble(circ2_copy)\n",
     "state = sim.run(qobj).result().get_statevector()\n",
     "\n",
-    "state = partial_trace(state, [10, 11, 12, 13])  ## Trace out the communication qubits (12 - 15)\n",
+    "state = partial_trace(state, [10,11,12,13]) ## Trace out the communication qubits (12 - 15)\n",
     "\n",
     "plot_bloch_multivector(state)"
    ]
@@ -507,7 +502,7 @@
     "qobj = assemble(dqc2_copy)\n",
     "state = sim.run(qobj).result().get_statevector()\n",
     "\n",
-    "state = partial_trace(state, [10, 11, 12, 13])  ## Trace out the communication qubits (12 - 15)\n",
+    "state = partial_trace(state, [10,11,12,13]) ## Trace out the communication qubits (12 - 15)\n",
     "\n",
     "plot_bloch_multivector(state)"
    ]
@@ -538,7 +533,7 @@
    ],
    "source": [
     "import qiskit.tools.jupyter\n",
-    "% qiskit_version_table"
+    "%qiskit_version_table"
    ]
   },
   {

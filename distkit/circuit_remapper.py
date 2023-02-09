@@ -11,7 +11,7 @@ from qiskit.circuit.quantumregister import Qubit
 from qiskit.circuit.classicalregister import ClassicalRegister, Clbit
 from qiskit.circuit.exceptions import CircuitError
 from qiskit import transpile
-from components import Layer, Topology
+from .components import Layer, Topology
 
 
 class CircuitRemapper:
@@ -34,7 +34,7 @@ class CircuitRemapper:
         # to index into op_stack.
         circ = circuit
         bit_indices = {bit: idx for idx,
-                       bit in enumerate(circ.qubits + circ.clbits)}
+        bit in enumerate(circ.qubits + circ.clbits)}
 
         # If no bits, return 0
         if not bit_indices:
@@ -343,8 +343,8 @@ class CircuitRemapper:
         circ.measure(all_qubits, measure_bits)
 
     @staticmethod
-    def _decompose_ready(circ: QuantumCircuit, list_of_gates: List[str] = None, 
-                                                        do_decompose: bool = True):
+    def _decompose_ready(circ: QuantumCircuit, list_of_gates: List[str] = None,
+                         do_decompose: bool = True):
         """
         Decompose the circuit into basic gates(1 and 2 qubit gates).
         Args:
@@ -352,7 +352,7 @@ class CircuitRemapper:
             topology: The network topology.
         Returns: Decomposed circuit
         """
-        timeout = time.time() + 60   # 1 minute from now
+        timeout = time.time() + 60  # 1 minute from now
 
         num_large_gates = 1
         circ_copy = circ.copy()
@@ -383,9 +383,9 @@ class CircuitRemapper:
                 break
             if do_decompose is True and time.time() > timeout:
                 print("Single level decomposition cutoff of 1 minute reached.",
-                "Performing transpilation with basis gates: cx, u1, u2, u3, id")
+                      "Performing transpilation with basis gates: cx, u1, u2, u3, id")
                 circ_copy = transpile(circ_copy, basis_gates=[
-                                      'cx', 'u1', 'u2', 'u3', 'id'])
+                    'cx', 'u1', 'u2', 'u3', 'id'])
                 break
 
         return circ_copy, incompatible_gate_present
