@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Create a Distributed Circuit for a CNOT &mdash; DistKit 0.1 documentation</title>
+  <title>Distributed Circuit for a CNOT gates &mdash; DistKit 0.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -23,7 +23,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Create a Distributed Circuit for performing Quantum Fourier Transform" href="QFT.html" />
+    <link rel="next" title="Distributed Quantum Fourier Transform" href="QFT.html" />
     <link rel="prev" title="Example to create a topology" href="Topology.html" /> 
 </head>
 
@@ -46,11 +46,16 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="Topology.html">Example to create a topology</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Create a Distributed Circuit for a CNOT</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#The-case-of-higher-order-gates">The case of higher order gates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="QFT.html">Create a Distributed Circuit for performing Quantum Fourier Transform</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="QFT.html#For-2-processor-with-4-qubits">For 2 processor with 4 qubits</a></li>
-<li class="toctree-l3"><a class="reference internal" href="QFT.html#For-4-processors-with-total-16-qubits">For 4 processors with total 16 qubits</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Distributed Circuit for a CNOT gates</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#The-case-of-higher-order-gates">The case of higher order gates</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="QFT.html">Distributed Quantum Fourier Transform</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="QFT.html#Create-a-Distributed-Circuit-for-performing-Quantum-Fourier-Transform">Create a Distributed Circuit for performing Quantum Fourier Transform</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="QFT.html#For-2-processor-with-4-qubits">For 2 processor with 4 qubits</a></li>
+<li class="toctree-l4"><a class="reference internal" href="QFT.html#For-4-processors-with-total-16-qubits">For 4 processors with total 16 qubits</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="Shors.html">Distribute Shor’s Algorithm</a></li>
@@ -108,7 +113,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../examples.html">Examples</a></li>
-      <li class="breadcrumb-item active">Create a Distributed Circuit for a CNOT</li>
+      <li class="breadcrumb-item active">Distributed Circuit for a CNOT gates</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/examples/CNOT.ipynb.txt" rel="nofollow"> View page source</a>
       </li>
@@ -410,8 +415,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<section id="Create-a-Distributed-Circuit-for-a-CNOT">
-<h1>Create a Distributed Circuit for a CNOT<a class="headerlink" href="#Create-a-Distributed-Circuit-for-a-CNOT" title="Permalink to this heading">¶</a></h1>
+<section id="Distributed-Circuit-for-a-CNOT-gates">
+<h1>Distributed Circuit for a CNOT gates<a class="headerlink" href="#Distributed-Circuit-for-a-CNOT-gates" title="Permalink to this heading">¶</a></h1>
 <p>Define a Topology</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
@@ -598,9 +603,8 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <p>As can be seen, the output of both circuits are equivalent</p>
-</section>
 <section id="The-case-of-higher-order-gates">
-<h1>The case of higher order gates<a class="headerlink" href="#The-case-of-higher-order-gates" title="Permalink to this heading">¶</a></h1>
+<h2>The case of higher order gates<a class="headerlink" href="#The-case-of-higher-order-gates" title="Permalink to this heading">¶</a></h2>
 <p>In the case of gates with more than 2 qubits, we shall need to decompose the circuit to 2 and 1 qubit gates for the distribution to work</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
@@ -670,6 +674,7 @@ div.rendered_html tbody tr:hover {
 <img alt="../_images/examples_CNOT_28_0.png" src="../_images/examples_CNOT_28_0.png" />
 </div>
 </div>
+</section>
 </section>
 
 
