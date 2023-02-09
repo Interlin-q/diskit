@@ -12,11 +12,8 @@
    },
    "outputs": [],
    "source": [
-    "import sys\n",
-    "sys.path.append(\"..\")\n",
-    "from distkit.circuit_remapper import *\n",
-    "from distkit.components.layer import *\n",
-    "from qiskit import assemble, Aer\n",
+    "from distkit import *\n",
+    "from qiskit import assemble, Aer, QuantumCircuit\n",
     "from qiskit.visualization import plot_bloch_multivector\n",
     "import warnings\n",
     "\n",
