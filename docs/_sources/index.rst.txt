@@ -7,12 +7,10 @@ Welcome to DistKit documentation!
     :includehidden:
     :maxdepth: 2
 
-    quick_start
     examples
     source
 
 
-- Quickstart: An overview of how to install the code and get started.
 - Examples: Some examples using the library.
 
 Introduction
