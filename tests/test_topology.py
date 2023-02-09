@@ -1,10 +1,7 @@
 """Test Cases for Topology Module (Test Succeeded for all unit methods)"""
 
-import sys
 from qiskit.circuit.quantumregister import QuantumRegister, Qubit
-
-sys.path.append("..")
-from distributed_qiskit.components.topology import Topology  # pylint: disable=import-error, wrong-import-position
+from distkit import Topology  # pylint: disable=import-error, wrong-import-position
 
 
 class TestClass:
