@@ -398,29 +398,114 @@ div.rendered_html tbody tr:hover {
     text-align: unset;
 }
 </style>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">Aer</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">randint</span>
+<span class="kn">from</span> <span class="nn">fractions</span> <span class="kn">import</span> <span class="n">Fraction</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">assemble</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">transpile</span>
 <span class="kn">from</span> <span class="nn">qiskit.utils</span> <span class="kn">import</span> <span class="n">QuantumInstance</span>
 <span class="kn">from</span> <span class="nn">qiskit.algorithms</span> <span class="kn">import</span> <span class="n">Shor</span>
+<span class="kn">from</span> <span class="nn">circuit_remapper</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">components.layer</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+C:\Users\anura\anaconda3\lib\site-packages\numpy\_distributor_init.py:32: UserWarning: loaded more than 1 DLL from .libs:
+C:\Users\anura\anaconda3\lib\site-packages\numpy\.libs\libopenblas.NOIJJG62EMASZI6NYURL6JBKM4EVBGM7.gfortran-win_amd64.dll
+C:\Users\anura\anaconda3\lib\site-packages\numpy\.libs\libopenblas.XWYDX2IKJW2NMTWSFYNGFUWKQU3LYTCZ.gfortran-win_amd64.dll
+  stacklevel=1)
+</pre></div></div>
 </div>
 <section id="Distribute-Shor’s-Algorithm">
 <h1>Distribute Shor’s Algorithm<a class="headerlink" href="#Distribute-Shor’s-Algorithm" title="Permalink to this heading">¶</a></h1>
-<p>Some parts of the code is taken from Qiskit Library</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<p>The code for building the monolithic circuit for factoring 15 is taken from Qiskit Library. <a class="reference external" href="https://qiskit.org/textbook/ch-algorithms/shor.html">https://qiskit.org/textbook/ch-algorithms/shor.html</a></p>
+<p>In this example we will solve the period finding problem for <span class="math notranslate nohighlight">\(a=7\)</span> and <span class="math notranslate nohighlight">\(N=15\)</span>. We provide the circuits for <span class="math notranslate nohighlight">\(U\)</span> where:</p>
+<div class="math notranslate nohighlight">
+\[U|y\rangle = |ay\bmod 15\rangle\]</div>
+<p>without explanation. To create <span class="math notranslate nohighlight">\(U^x\)</span>, we will simply repeat the circuit <span class="math notranslate nohighlight">\(x\)</span> times. In the next section we will discuss a general method for creating these circuits efficiently. The function <code class="docutils literal notranslate"><span class="pre">c_amod15</span></code> returns the controlled-U gate for <code class="docutils literal notranslate"><span class="pre">a</span></code>, repeated <code class="docutils literal notranslate"><span class="pre">power</span></code> times.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">51</span>
-<span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;aer_simulator&#39;</span><span class="p">)</span>
-<span class="n">quantum_instance</span> <span class="o">=</span> <span class="n">QuantumInstance</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1024</span><span class="p">)</span>
-<span class="n">shor</span> <span class="o">=</span> <span class="n">Shor</span><span class="p">(</span><span class="n">quantum_instance</span><span class="o">=</span><span class="n">quantum_instance</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">shor</span><span class="o">.</span><span class="n">factor</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The list of factors of </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2"> as computed by the Shor&#39;s algorithm is </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">factors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">c_amod15</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">power</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Controlled multiplication by a mod 15&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">13</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;a&#39; must be 2,4,7,8,11 or 13&quot;</span><span class="p">)</span>
+    <span class="n">U</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">power</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">13</span><span class="p">]:</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]:</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">11</span><span class="p">]:</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">U</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">13</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+                <span class="n">U</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+    <span class="n">U</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">to_gate</span><span class="p">()</span>
+    <span class="n">U</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%i</span><span class="s2">^</span><span class="si">%i</span><span class="s2"> mod 15&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">power</span><span class="p">)</span>
+    <span class="n">c_U</span> <span class="o">=</span> <span class="n">U</span><span class="o">.</span><span class="n">control</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">c_U</span>
+</pre></div>
+</div>
+</div>
+<p>We also import the circuit for the QFT (you can read more about the QFT in the <a class="reference external" href="./quantum-fourier-transform.html#generalqft">quantum Fourier transform chapter</a>):</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">qft_dagger</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;n-qubit QFTdagger the first n qubits in circ&quot;&quot;&quot;</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="c1"># Don&#39;t forget the Swaps!</span>
+    <span class="k">for</span> <span class="n">qubit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">qc</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="n">qubit</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="n">qubit</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
+            <span class="n">qc</span><span class="o">.</span><span class="n">cp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="n">m</span><span class="p">)),</span> <span class="n">m</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+        <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;QFT†&quot;</span>
+    <span class="k">return</span> <span class="n">qc</span>
+</pre></div>
+</div>
+</div>
+<p>Factoring from Period Finding</p>
+<p>Not all factoring problems are difficult; we can spot an even number instantly and know that one of its factors is 2. In fact, there are <a class="reference external" href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-4.pdf#%5B%7B%22num%22%3A127%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C70%2C223%2C0%5D">specific criteria</a> for choosing numbers that are difficult to factor, but the basic idea is to choose the product of two large prime numbers.</p>
+<p>A general factoring algorithm will first check to see if there is a shortcut to factoring the integer (is the number even? Is the number of the form <span class="math notranslate nohighlight">\(N = a^b\)</span>?), before using Shor’s period finding for the worst-case scenario. Since we aim to focus on the quantum part of the algorithm, we will jump straight to the case in which N is the product of two primes.</p>
+<p>To see an example of factoring on a small number of qubits, we will factor 15, which we all know is the product of the not-so-large prime numbers 3 and 5.</p>
+<p>We will use 8 counting qubits, so in the topology the number of qubits must be <span class="math notranslate nohighlight">\(\geq\)</span> 8 + 4</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N</span> <span class="o">=</span> <span class="mi">15</span>
+</pre></div>
+</div>
+</div>
+<p>The first step is to choose a random number, <span class="math notranslate nohighlight">\(a\)</span>, between <span class="math notranslate nohighlight">\(1\)</span> and <span class="math notranslate nohighlight">\(N-1\)</span>:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># This is to make sure we get reproduceable results</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -429,8 +514,271 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-The list of factors of 51 as computed by the Shor&#39;s algorithm is [3, 17].
+7
 </pre></div></div>
+</div>
+<p>Next we quickly check it isn’t already a non-trivial factor of <span class="math notranslate nohighlight">\(N\)</span>:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">gcd</span> <span class="c1"># greatest common divisor</span>
+<span class="n">gcd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1
+</pre></div></div>
+</div>
+<p>At First we see the monolithic implementation.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">qpe_amod15</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="n">n_count</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">4</span><span class="o">+</span><span class="n">n_count</span><span class="p">,</span> <span class="n">n_count</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_count</span><span class="p">):</span>
+        <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>     <span class="c1"># Initialize counting qubits in state |+&gt;</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="o">+</span><span class="n">n_count</span><span class="p">)</span> <span class="c1"># And auxiliary register in state |1&gt;</span>
+    <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_count</span><span class="p">):</span> <span class="c1"># Do controlled-U operations</span>
+        <span class="n">qc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c_amod15</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="n">q</span><span class="p">),</span>
+                 <span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">n_count</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qft_dagger</span><span class="p">(</span><span class="n">n_count</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_count</span><span class="p">))</span> <span class="c1"># Do inverse-QFT</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_count</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_count</span><span class="p">))</span>
+    <span class="c1"># Simulate Results</span>
+    <span class="n">aer_sim</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;aer_simulator&#39;</span><span class="p">)</span>
+    <span class="c1"># Setting memory=True below allows us to see a list of each sequential reading</span>
+    <span class="n">t_qc</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">aer_sim</span><span class="p">)</span>
+    <span class="n">qobj</span> <span class="o">=</span> <span class="n">assemble</span><span class="p">(</span><span class="n">t_qc</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">aer_sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qobj</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="n">readings</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_memory</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Register Reading: &quot;</span> <span class="o">+</span> <span class="n">readings</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">readings</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">n_count</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Corresponding Phase: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">phase</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">phase</span><span class="p">,</span> <span class="n">qc</span>
+</pre></div>
+</div>
+</div>
+<p>We can modify the monolithic version to a distributed version of the function conveniently with minimal changes in structure and data</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">qpe_amod15_dist</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">topology</span><span class="p">):</span>
+    <span class="n">qregs</span> <span class="o">=</span> <span class="n">topology</span><span class="o">.</span><span class="n">get_regs</span><span class="p">()</span>
+    <span class="n">n_count</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="o">*</span><span class="n">qregs</span><span class="p">,</span> <span class="n">ClassicalRegister</span><span class="p">(</span><span class="n">n_count</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_count</span><span class="p">):</span>
+        <span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>     <span class="c1"># Initialize counting qubits in state |+&gt;</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="o">+</span><span class="n">n_count</span><span class="p">)</span> <span class="c1"># And auxiliary register in state |1&gt;</span>
+    <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_count</span><span class="p">):</span> <span class="c1"># Do controlled-U operations</span>
+        <span class="n">qc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c_amod15</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="n">q</span><span class="p">),</span>
+                 <span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">n_count</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)])</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qft_dagger</span><span class="p">(</span><span class="n">n_count</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_count</span><span class="p">))</span> <span class="c1"># Do inverse-QFT</span>
+    <span class="n">qc</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_count</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_count</span><span class="p">))</span>
+    <span class="n">remapper</span> <span class="o">=</span> <span class="n">CircuitRemapper</span><span class="p">(</span><span class="n">circuit_topo</span><span class="p">)</span>
+    <span class="n">dist_circ</span> <span class="o">=</span> <span class="n">remapper</span><span class="o">.</span><span class="n">remap_circuit</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">decompose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Simulate Results</span>
+    <span class="n">aer_sim</span> <span class="o">=</span> <span class="n">Aer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s1">&#39;aer_simulator&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Setting memory=True below allows us to see a list of each sequential reading</span>
+    <span class="n">t_qc</span> <span class="o">=</span> <span class="n">transpile</span><span class="p">(</span><span class="n">dist_circ</span><span class="p">,</span> <span class="n">aer_sim</span><span class="p">)</span>
+    <span class="n">qobj</span> <span class="o">=</span> <span class="n">assemble</span><span class="p">(</span><span class="n">t_qc</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">aer_sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">qobj</span><span class="p">,</span> <span class="n">memory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="n">readings</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_memory</span><span class="p">()</span>
+
+    <span class="c1">## Need to manipulate readouts to exclude cat_measurement registers</span>
+    <span class="n">final_readings</span> <span class="o">=</span> <span class="n">readings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">reading</span> <span class="ow">in</span> <span class="n">final_readings</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">reading</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_count</span><span class="p">:</span>
+            <span class="n">final_reading</span> <span class="o">=</span> <span class="n">reading</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Register Reading: &quot;</span> <span class="o">+</span> <span class="n">final_reading</span><span class="p">)</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">final_reading</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">n_count</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Corresponding Phase: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">phase</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">phase</span><span class="p">,</span>  <span class="n">dist_circ</span>
+</pre></div>
+</div>
+</div>
+<p><strong>Again, Topology qubits must be :math:`geq` 8 + 4</strong>, we have taken 13 qubits with distribution over 2 qpus</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuit_topo</span> <span class="o">=</span> <span class="n">Topology</span><span class="p">()</span>
+<span class="n">circuit_topo</span><span class="o">.</span><span class="n">create_qmap</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span><span class="s2">&quot;sys_shor&quot;</span><span class="p">)</span>
+<span class="n">circuit_topo</span><span class="o">.</span><span class="n">qmap</span><span class="p">,</span> <span class="n">circuit_topo</span><span class="o">.</span><span class="n">emap</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+({&#39;sys_shor0&#39;: [Qubit(QuantumRegister(6, &#39;sys_shor0&#39;), 0),
+   Qubit(QuantumRegister(6, &#39;sys_shor0&#39;), 1),
+   Qubit(QuantumRegister(6, &#39;sys_shor0&#39;), 2),
+   Qubit(QuantumRegister(6, &#39;sys_shor0&#39;), 3),
+   Qubit(QuantumRegister(6, &#39;sys_shor0&#39;), 4),
+   Qubit(QuantumRegister(6, &#39;sys_shor0&#39;), 5)],
+  &#39;sys_shor1&#39;: [Qubit(QuantumRegister(7, &#39;sys_shor1&#39;), 0),
+   Qubit(QuantumRegister(7, &#39;sys_shor1&#39;), 1),
+   Qubit(QuantumRegister(7, &#39;sys_shor1&#39;), 2),
+   Qubit(QuantumRegister(7, &#39;sys_shor1&#39;), 3),
+   Qubit(QuantumRegister(7, &#39;sys_shor1&#39;), 4),
+   Qubit(QuantumRegister(7, &#39;sys_shor1&#39;), 5),
+   Qubit(QuantumRegister(7, &#39;sys_shor1&#39;), 6)]},
+ {&#39;sys_shor0&#39;: Qubit(QuantumRegister(1, &#39;com_sys_shor0&#39;), 0),
+  &#39;sys_shor1&#39;: Qubit(QuantumRegister(1, &#39;com_sys_shor1&#39;), 0)})
+</pre></div></div>
+</div>
+<p>From this phase, we can easily find a guess for <span class="math notranslate nohighlight">\(r\)</span>:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">phase</span><span class="p">,</span> <span class="n">circ</span> <span class="o">=</span> <span class="n">qpe_amod15_dist</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">circuit_topo</span><span class="p">)</span>
+<span class="n">Fraction</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span><span class="o">.</span><span class="n">limit_denominator</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="c1"># Denominator should (hopefully!) tell us r</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Single level decomposition cutoff of 1 minute reached. Performing transpilation with basis gates: cx, u1, u2, u3, id
+Register Reading: 11000000
+Corresponding Phase: 0.750000
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Fraction(3, 4)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frac</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span><span class="o">.</span><span class="n">limit_denominator</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">s</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">frac</span><span class="o">.</span><span class="n">numerator</span><span class="p">,</span> <span class="n">frac</span><span class="o">.</span><span class="n">denominator</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+4
+</pre></div></div>
+</div>
+<p>Now we have <span class="math notranslate nohighlight">\(r\)</span>, we might be able to use this to find a factor of <span class="math notranslate nohighlight">\(N\)</span>. Since:</p>
+<div class="math notranslate nohighlight">
+\[a^r \bmod N = 1\]</div>
+<p>then:</p>
+<div class="math notranslate nohighlight">
+\[(a^r - 1) \bmod N = 0\]</div>
+<p>which means <span class="math notranslate nohighlight">\(N\)</span> must divide <span class="math notranslate nohighlight">\(a^r-1\)</span>. And if <span class="math notranslate nohighlight">\(r\)</span> is also even, then we can write:</p>
+<div class="math notranslate nohighlight">
+\[a^r -1 = (a^{r/2}-1)(a^{r/2}+1)\]</div>
+<p>(if <span class="math notranslate nohighlight">\(r\)</span> is not even, we cannot go further and must try again with a different value for <span class="math notranslate nohighlight">\(a\)</span>). There is then a high probability that the greatest common divisor of <span class="math notranslate nohighlight">\(N\)</span> and either <span class="math notranslate nohighlight">\(a^{r/2}-1\)</span>, or <span class="math notranslate nohighlight">\(a^{r/2}+1\)</span> is a proper factor of <span class="math notranslate nohighlight">\(N\)</span> [2]:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">guesses</span> <span class="o">=</span> <span class="p">[</span><span class="n">gcd</span><span class="p">(</span><span class="n">a</span><span class="o">**</span><span class="p">(</span><span class="n">r</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span> <span class="n">gcd</span><span class="p">(</span><span class="n">a</span><span class="o">**</span><span class="p">(</span><span class="n">r</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">guesses</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[3, 5]
+</pre></div></div>
+</div>
+<p>The cell below repeats the algorithm until at least one factor of 15 is found.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">factor_found</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">attempt</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="ow">not</span> <span class="n">factor_found</span><span class="p">:</span>
+    <span class="n">attempt</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Attempt </span><span class="si">%i</span><span class="s2">:&quot;</span> <span class="o">%</span> <span class="n">attempt</span><span class="p">)</span>
+    <span class="n">phase</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">qpe_amod15_dist</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">circuit_topo</span><span class="p">)</span> <span class="c1"># Phase = s/r</span>
+    <span class="n">frac</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span><span class="o">.</span><span class="n">limit_denominator</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="c1"># Denominator should (hopefully!) tell us r</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">frac</span><span class="o">.</span><span class="n">denominator</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Result: r = </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">r</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">phase</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Guesses for factors are gcd(x^{r/2} ±1 , 15)</span>
+        <span class="n">guesses</span> <span class="o">=</span> <span class="p">[</span><span class="n">gcd</span><span class="p">(</span><span class="n">a</span><span class="o">**</span><span class="p">(</span><span class="n">r</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span> <span class="n">gcd</span><span class="p">(</span><span class="n">a</span><span class="o">**</span><span class="p">(</span><span class="n">r</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Guessed Factors: </span><span class="si">%i</span><span class="s2"> and </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">guesses</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">guesses</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">guess</span> <span class="ow">in</span> <span class="n">guesses</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">guess</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="p">]</span> <span class="ow">and</span> <span class="p">(</span><span class="n">N</span> <span class="o">%</span> <span class="n">guess</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># Check to see if guess is a factor</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*** Non-trivial factor found: </span><span class="si">%i</span><span class="s2"> ***&quot;</span> <span class="o">%</span> <span class="n">guess</span><span class="p">)</span>
+                <span class="n">factor_found</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Attempt 1:
+Single level decomposition cutoff of 1 minute reached. Performing transpilation with basis gates: cx, u1, u2, u3, id
+Register Reading: 10000000
+Corresponding Phase: 0.500000
+Result: r = 2
+Guessed Factors: 3 and 1
+*** Non-trivial factor found: 3 ***
+</pre></div></div>
+</div>
+<p>References</p>
+<ol class="arabic simple">
+<li><p>Stephane Beauregard, <em>Circuit for Shor’s algorithm using 2n+3 qubits,</em> <a class="reference external" href="https://arxiv.org/abs/quant-ph/0205095">arXiv:quant-ph/0205095</a></p></li>
+<li><ol class="upperalpha simple" start="13">
+<li><p>Nielsen and I. Chuang, <em>Quantum Computation and Quantum Information,</em> Cambridge Series on Information and the Natural Sciences (Cambridge University Press, Cambridge, 2000). (Page 633)</p></li>
+</ol>
+</li>
+</ol>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">qiskit.tools.jupyter</span>
+<span class="o">%</span><span class="k">qiskit_version_table</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<h3>Version Information</h3><table><tr><th>Qiskit Software</th><th>Version</th></tr><tr><td><code>qiskit-terra</code></td><td>0.21.2</td></tr><tr><td><code>qiskit-aer</code></td><td>0.11.0</td></tr><tr><td><code>qiskit-ignis</code></td><td>0.3.3</td></tr><tr><td><code>qiskit-ibmq-provider</code></td><td>0.19.2</td></tr><tr><td><code>qiskit</code></td><td>0.38.0</td></tr><tr><th>System information</th></tr><tr><td>Python version</td><td>3.7.10</td></tr><tr><td>Python compiler</td><td>MSC v.1916 64 bit (AMD64)</td></tr><tr><td>Python build</td><td>default, Feb 26 2021 13:06:18</td></tr><tr><td>OS</td><td>Windows</td></tr><tr><td>CPUs</td><td>4</td></tr><tr><td>Memory (Gb)</td><td>15.438713073730469</td></tr><tr><td colspan='2'>Wed Feb 08 16:49:26 2023 India Standard Time</td></tr></table></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
