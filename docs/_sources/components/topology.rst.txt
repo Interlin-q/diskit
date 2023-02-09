@@ -1,5 +1,5 @@
 Topology
 ========
 
-.. automodule:: distkit.components.topology
+.. automodule:: diskit.components.topology
    :members:

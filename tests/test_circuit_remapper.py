@@ -1,5 +1,5 @@
 """ Test Cases for Circuit Remapper Module """
-from distkit import Topology, CircuitRemapper
+from diskit import Topology, CircuitRemapper
 from qiskit.circuit import QuantumCircuit
 from qiskit.circuit.quantumregister import QuantumRegister, Qubit
 

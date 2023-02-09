@@ -8,7 +8,7 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'DistKit'
+project = 'diskit'
 copyright = '2023, Anuranan Das, Stephen DiAdamo'
 author = 'Anuranan Das, Stephen DiAdamo'
 release = '0.1'
