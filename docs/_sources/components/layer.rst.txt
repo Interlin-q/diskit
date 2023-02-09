@@ -1,5 +1,5 @@
 Layer
 =====
 
-.. automodule:: distkit.components.layer
+.. automodule:: diskit.components.layer
    :members:
