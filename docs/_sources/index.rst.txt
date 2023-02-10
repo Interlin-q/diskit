@@ -11,9 +11,6 @@ Welcome to Diskit documentation!
     examples
     source
 
-
-- Examples: Some examples using the library.
-
 Introduction
 ============
 
