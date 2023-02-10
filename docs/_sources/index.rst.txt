@@ -1,4 +1,4 @@
-Welcome to diskit documentation!
+Welcome to Diskit documentation!
 ================================
 
 
@@ -7,6 +7,7 @@ Welcome to diskit documentation!
     :includehidden:
     :maxdepth: 2
 
+    quick_start
     examples
     source
 

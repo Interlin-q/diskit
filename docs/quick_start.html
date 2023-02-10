@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Examples" href="examples.html" />
-    <link rel="prev" title="Welcome to diskit documentation!" href="index.html" />
+    <link rel="prev" title="Welcome to Diskit documentation!" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,19 +44,55 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/CNOT.html">Create a Distributed Circuit for a CNOT</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/CNOT.html#The-case-of-higher-order-gates">The case of higher order gates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/QFT.html">Create a Distributed Circuit for performing Quantum Fourier Transform</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="examples/QFT.html#For-2-processor-with-4-qubits">For 2 processor with 4 qubits</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples/QFT.html#For-4-processors-with-total-16-qubits">For 4 processors with total 16 qubits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/Topology.html">Example to create a topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/CNOT.html">Distributed Circuit for a CNOT gates</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/CNOT.html#The-case-of-higher-order-gates">The case of higher order gates</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/QFT.html">Distributed Quantum Fourier Transform</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/QFT.html#Create-a-Distributed-Circuit-for-performing-Quantum-Fourier-Transform">Create a Distributed Circuit for performing Quantum Fourier Transform</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="examples/QFT.html#For-2-processor-with-4-qubits">For 2 processor with 4 qubits</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/QFT.html#For-4-processors-with-total-16-qubits">For 4 processors with total 16 qubits</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="examples/Shors.html">Distribute Shor’s Algorithm</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="source.html">Components</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="components/layer.html">Layer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="components/topology.html">Topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/layer.html">Layer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components/layer.html#diskit.components.layer.Layer"><code class="docutils literal notranslate"><span class="pre">Layer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="components/layer.html#diskit.components.layer.Layer.add_operation"><code class="docutils literal notranslate"><span class="pre">Layer.add_operation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/layer.html#diskit.components.layer.Layer.add_operations"><code class="docutils literal notranslate"><span class="pre">Layer.add_operations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/layer.html#diskit.components.layer.Layer.non_local_operations"><code class="docutils literal notranslate"><span class="pre">Layer.non_local_operations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/layer.html#diskit.components.layer.Layer.operations"><code class="docutils literal notranslate"><span class="pre">Layer.operations</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/layer.html#diskit.components.layer.Layer.remove_operation"><code class="docutils literal notranslate"><span class="pre">Layer.remove_operation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="components/topology.html">Topology</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components/topology.html#diskit.components.topology.Topology"><code class="docutils literal notranslate"><span class="pre">Topology</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#diskit.components.topology.Topology.add_qpu"><code class="docutils literal notranslate"><span class="pre">Topology.add_qpu()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#diskit.components.topology.Topology.are_adjacent"><code class="docutils literal notranslate"><span class="pre">Topology.are_adjacent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#diskit.components.topology.Topology.create_emap"><code class="docutils literal notranslate"><span class="pre">Topology.create_emap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#diskit.components.topology.Topology.create_qmap"><code class="docutils literal notranslate"><span class="pre">Topology.create_qmap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#diskit.components.topology.Topology.get_all_qubits"><code class="docutils literal notranslate"><span class="pre">Topology.get_all_qubits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#diskit.components.topology.Topology.get_epr_id"><code class="docutils literal notranslate"><span class="pre">Topology.get_epr_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#diskit.components.topology.Topology.get_host"><code class="docutils literal notranslate"><span class="pre">Topology.get_host()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#diskit.components.topology.Topology.get_qpu"><code class="docutils literal notranslate"><span class="pre">Topology.get_qpu()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#diskit.components.topology.Topology.get_qubits"><code class="docutils literal notranslate"><span class="pre">Topology.get_qubits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#diskit.components.topology.Topology.get_regs"><code class="docutils literal notranslate"><span class="pre">Topology.get_regs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#diskit.components.topology.Topology.num_hosts"><code class="docutils literal notranslate"><span class="pre">Topology.num_hosts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#diskit.components.topology.Topology.num_qubits"><code class="docutils literal notranslate"><span class="pre">Topology.num_qubits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#diskit.components.topology.Topology.qmap"><code class="docutils literal notranslate"><span class="pre">Topology.qmap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#diskit.components.topology.Topology.reinitialize"><code class="docutils literal notranslate"><span class="pre">Topology.reinitialize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/topology.html#diskit.components.topology.Topology.remove_qpu"><code class="docutils literal notranslate"><span class="pre">Topology.remove_qpu()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -111,6 +147,28 @@
 </style>
 <section id="quickstart">
 <h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this heading">¶</a></h1>
+<p>Diskit is available as a PyPi project and is can be installed with <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">diskit</span>
+</pre></div>
+</div>
+<p>Diskit relies on Qiskit and therefore it should also be installed.
+Once installed, to generate a distributed circuit, one can simply generate a topology,
+create the circuit, perform the remapping, and run it as usual.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">diskit</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">network_topology</span> <span class="o">=</span> <span class="n">Topology</span><span class="p">()</span>
+<span class="n">network_topology</span><span class="o">.</span><span class="n">create_qmap</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;sys&quot;</span><span class="p">)</span>
+<span class="n">qregs</span> <span class="o">=</span> <span class="n">circuit_topo</span><span class="o">.</span><span class="n">get_regs</span><span class="p">()</span>
+
+<span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="o">*</span><span class="n">qregs</span><span class="p">)</span>
+<span class="c1"># Qubit 0 is on QPU 1, qubit 1 on QPU 2</span>
+<span class="n">qc</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">qc</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">remapper</span> <span class="o">=</span> <span class="n">CircuitRemapper</span><span class="p">(</span><span class="n">circuit_topo</span><span class="p">)</span>
+<span class="n">dist_circ</span> <span class="o">=</span> <span class="n">remapper</span><span class="o">.</span><span class="n">remap_circuit</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 
 

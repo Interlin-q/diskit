@@ -44,6 +44,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quickstart</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="Topology.html">Example to create a topology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="CNOT.html">Distributed Circuit for a CNOT gates</a><ul>
@@ -424,7 +425,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">qft_rotations</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Add controlled phase gates as per qft on the first n qubits in circuit&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add controlled phase gates as per qft on the first n qubits in circuit&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">circuit</span>
     <span class="n">n</span> <span class="o">-=</span> <span class="mi">1</span>
@@ -434,14 +435,14 @@ div.rendered_html tbody tr:hover {
     <span class="n">qft_rotations</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="c1"># recursion call</span>
 
 <span class="k">def</span> <span class="nf">swap_registers</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Swap Registers as per QFT scheme&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Swap Registers as per QFT scheme&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">qubit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">):</span>
         <span class="n">circuit</span><span class="o">.</span><span class="n">swap</span><span class="p">(</span><span class="n">qubit</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="n">qubit</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">circuit</span>
 
 
 <span class="k">def</span> <span class="nf">qft</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">transpile_swap</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;QFT on the first n qubits in circuit&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;QFT on the first n qubits in circuit&quot;&quot;&quot;</span>
     <span class="n">qft_rotations</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
     <span class="n">swap_registers</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">circuit</span>
