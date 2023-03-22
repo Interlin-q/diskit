@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Layer &mdash; diskit 0.1 documentation</title>
+  <title>Circuit Remapper &mdash; diskit 0.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Topology" href="topology.html" />
-    <link rel="prev" title="Circuit Remapper" href="circuit_remapper.html" /> 
+    <link rel="next" title="Layer" href="layer.html" />
+    <link rel="prev" title="Components" href="../source.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -61,22 +61,22 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../source.html">Components</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="circuit_remapper.html">Circuit Remapper</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="circuit_remapper.html#diskit.circuit_remapper.CircuitRemapper"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="circuit_remapper.html#diskit.circuit_remapper.CircuitRemapper.collate_measurements"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper.collate_measurements()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="circuit_remapper.html#diskit.circuit_remapper.CircuitRemapper.do_measure_ready"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper.do_measure_ready()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="circuit_remapper.html#diskit.circuit_remapper.CircuitRemapper.remap_circuit"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper.remap_circuit()</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Circuit Remapper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#diskit.circuit_remapper.CircuitRemapper"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#diskit.circuit_remapper.CircuitRemapper.collate_measurements"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper.collate_measurements()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#diskit.circuit_remapper.CircuitRemapper.do_measure_ready"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper.do_measure_ready()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#diskit.circuit_remapper.CircuitRemapper.remap_circuit"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper.remap_circuit()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Layer</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#diskit.components.layer.Layer"><code class="docutils literal notranslate"><span class="pre">Layer</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#diskit.components.layer.Layer.add_operation"><code class="docutils literal notranslate"><span class="pre">Layer.add_operation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#diskit.components.layer.Layer.add_operations"><code class="docutils literal notranslate"><span class="pre">Layer.add_operations()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#diskit.components.layer.Layer.non_local_operations"><code class="docutils literal notranslate"><span class="pre">Layer.non_local_operations()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#diskit.components.layer.Layer.operations"><code class="docutils literal notranslate"><span class="pre">Layer.operations</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#diskit.components.layer.Layer.remove_operation"><code class="docutils literal notranslate"><span class="pre">Layer.remove_operation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="layer.html">Layer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="layer.html#diskit.components.layer.Layer"><code class="docutils literal notranslate"><span class="pre">Layer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="layer.html#diskit.components.layer.Layer.add_operation"><code class="docutils literal notranslate"><span class="pre">Layer.add_operation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="layer.html#diskit.components.layer.Layer.add_operations"><code class="docutils literal notranslate"><span class="pre">Layer.add_operations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="layer.html#diskit.components.layer.Layer.non_local_operations"><code class="docutils literal notranslate"><span class="pre">Layer.non_local_operations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="layer.html#diskit.components.layer.Layer.operations"><code class="docutils literal notranslate"><span class="pre">Layer.operations</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="layer.html#diskit.components.layer.Layer.remove_operation"><code class="docutils literal notranslate"><span class="pre">Layer.remove_operation()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -121,9 +121,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../source.html">Components</a></li>
-      <li class="breadcrumb-item active">Layer</li>
+      <li class="breadcrumb-item active">Circuit Remapper</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/components/layer.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/components/circuit_remapper.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -155,75 +155,61 @@
     text-align: unset;
 }
 </style>
-<section id="module-diskit.components.layer">
-<span id="layer"></span><h1>Layer<a class="headerlink" href="#module-diskit.components.layer" title="Permalink to this heading">¶</a></h1>
-<p>Layer object which is a collection of operations to be applied on the qubits in the system.</p>
+<section id="module-diskit.circuit_remapper">
+<span id="circuit-remapper"></span><h1>Circuit Remapper<a class="headerlink" href="#module-diskit.circuit_remapper" title="Permalink to this heading">¶</a></h1>
+<p>The circuit remapper logic.</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="diskit.components.layer.Layer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">diskit.components.layer.</span></span><span class="sig-name descname"><span class="pre">Layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">CircuitInstruction</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topology</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="topology.html#diskit.components.topology.Topology" title="diskit.components.topology.Topology"><span class="pre">Topology</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diskit.components.layer.Layer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Layer object which is a collection of operations to be applied on the qubits in the system.</p>
+<dt class="sig sig-object py" id="diskit.circuit_remapper.CircuitRemapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">diskit.circuit_remapper.</span></span><span class="sig-name descname"><span class="pre">CircuitRemapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topology</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="topology.html#diskit.components.topology.Topology" title="diskit.components.topology.Topology"><span class="pre">Topology</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diskit.circuit_remapper.CircuitRemapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>The circuit remapper class for remapping a ciruit to a topology.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="diskit.components.layer.Layer.add_operation">
-<span class="sig-name descname"><span class="pre">add_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CircuitInstruction</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diskit.components.layer.Layer.add_operation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add an operation to the layer.</p>
+<dt class="sig sig-object py" id="diskit.circuit_remapper.CircuitRemapper.collate_measurements">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">collate_measurements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_qubits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diskit.circuit_remapper.CircuitRemapper.collate_measurements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collate the measurements from the simulation results.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>operation</strong> (<em>Operation</em>) – Information about the operation to be added in the layer</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim_results</strong> – simulation results from the simulator</p></li>
+<li><p><strong>num_qubits</strong> – number of qubits in the circuit</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary of measurements</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="diskit.components.layer.Layer.add_operations">
-<span class="sig-name descname"><span class="pre">add_operations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">CircuitInstruction</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diskit.components.layer.Layer.add_operations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add multiple operations to the layer.</p>
+<dt class="sig sig-object py" id="diskit.circuit_remapper.CircuitRemapper.do_measure_ready">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">do_measure_ready</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circ</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QuantumCircuit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topology</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="topology.html#diskit.components.topology.Topology" title="diskit.components.topology.Topology"><span class="pre">Topology</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diskit.circuit_remapper.CircuitRemapper.do_measure_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make the circuit is ready for measurement.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>operations</strong> (<em>list</em>) – List of Operation objects</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>circ</strong> – the circuit to measure.</p></li>
+<li><p><strong>topology</strong> – The network topology.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Circuit ready for measurement</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="diskit.components.layer.Layer.non_local_operations">
-<span class="sig-name descname"><span class="pre">non_local_operations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diskit.components.layer.Layer.non_local_operations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if a control gate is present in the layer between two different
-computing hosts.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if control gate is present between two different computing hosts</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>(bool)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="diskit.components.layer.Layer.operations">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">operations</span></span><a class="headerlink" href="#diskit.components.layer.Layer.operations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the <em>operations</em> in the layer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><dl class="simple">
-<dt>List of Operation objects, which contains information about the operation to</dt><dd><p>be performed on the quantum circuit.</p>
-</dd>
-</dl>
-</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>(list)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="diskit.components.layer.Layer.remove_operation">
-<span class="sig-name descname"><span class="pre">remove_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diskit.components.layer.Layer.remove_operation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove an operation from the layer.</p>
+<dt class="sig sig-object py" id="diskit.circuit_remapper.CircuitRemapper.remap_circuit">
+<span class="sig-name descname"><span class="pre">remap_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">circuit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QuantumCircuit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decompose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decompose_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diskit.circuit_remapper.CircuitRemapper.remap_circuit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remap the circuit for the topology.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – Index of the operation to be removed</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>circuit</strong> – The circuit to be distributed</p></li>
+<li><p><strong>decompose</strong> – Decompose the circuit into compatible 2-qubit gates if possible</p></li>
+<li><p><strong>decompose_list</strong> – Gate names which should be decomposed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A distributed circuit over the topology.</p>
 </dd>
 </dl>
 </dd></dl>

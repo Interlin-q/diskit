@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to diskit documentation! &mdash; diskit 0.1 documentation</title>
+  <title>Welcome to Diskit documentation! &mdash; diskit 0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -21,7 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Examples" href="examples.html" /> 
+    <link rel="next" title="Quickstart" href="quick_start.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,6 +41,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples/Topology.html">Example to create a topology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/CNOT.html">Distributed Circuit for a CNOT gates</a><ul>
@@ -59,6 +60,15 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="source.html">Components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="components/circuit_remapper.html">Circuit Remapper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components/circuit_remapper.html#diskit.circuit_remapper.CircuitRemapper"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="components/circuit_remapper.html#diskit.circuit_remapper.CircuitRemapper.collate_measurements"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper.collate_measurements()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/circuit_remapper.html#diskit.circuit_remapper.CircuitRemapper.do_measure_ready"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper.do_measure_ready()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/circuit_remapper.html#diskit.circuit_remapper.CircuitRemapper.remap_circuit"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper.remap_circuit()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="components/layer.html">Layer</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="components/layer.html#diskit.components.layer.Layer"><code class="docutils literal notranslate"><span class="pre">Layer</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="components/layer.html#diskit.components.layer.Layer.add_operation"><code class="docutils literal notranslate"><span class="pre">Layer.add_operation()</span></code></a></li>
@@ -109,7 +119,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Welcome to diskit documentation!</li>
+      <li class="breadcrumb-item active">Welcome to Diskit documentation!</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -144,10 +154,11 @@
 }
 </style>
 <section id="welcome-to-diskit-documentation">
-<h1>Welcome to diskit documentation!<a class="headerlink" href="#welcome-to-diskit-documentation" title="Permalink to this heading">¶</a></h1>
+<h1>Welcome to Diskit documentation!<a class="headerlink" href="#welcome-to-diskit-documentation" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples/Topology.html">Example to create a topology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/CNOT.html">Distributed Circuit for a CNOT gates</a></li>
@@ -156,15 +167,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="source.html">Components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="components/circuit_remapper.html">Circuit Remapper</a></li>
 <li class="toctree-l2"><a class="reference internal" href="components/layer.html">Layer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="components/topology.html">Topology</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<ul class="simple">
-<li><p>Examples: Some examples using the library.</p></li>
-</ul>
 </section>
 <section id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h1>

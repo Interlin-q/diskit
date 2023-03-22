@@ -45,6 +45,7 @@ class Layer:
     def add_operation(self, operation: CircuitInstruction):
         """
         Add an operation to the layer.
+
         Args:
             operation (Operation): Information about the operation to be added in the layer
         """
@@ -81,6 +82,7 @@ class Layer:
     def remove_operation(self, index: int):
         """
         Remove an operation from the layer.
+
         Args:
             index (int): Index of the operation to be removed
         """

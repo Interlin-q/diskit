@@ -21,7 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Layer" href="components/layer.html" />
+    <link rel="next" title="Circuit Remapper" href="components/circuit_remapper.html" />
     <link rel="prev" title="Distribute Shor’s Algorithm" href="examples/Shors.html" /> 
 </head>
 
@@ -45,17 +45,31 @@
 <li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples/Topology.html">Example to create a topology</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/CNOT.html">Create a Distributed Circuit for a CNOT</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/CNOT.html#The-case-of-higher-order-gates">The case of higher order gates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/QFT.html">Create a Distributed Circuit for performing Quantum Fourier Transform</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="examples/QFT.html#For-2-processor-with-4-qubits">For 2 processor with 4 qubits</a></li>
-<li class="toctree-l3"><a class="reference internal" href="examples/QFT.html#For-4-processors-with-total-16-qubits">For 4 processors with total 16 qubits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/CNOT.html">Distributed Circuit for a CNOT gates</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/CNOT.html#The-case-of-higher-order-gates">The case of higher order gates</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/QFT.html">Distributed Quantum Fourier Transform</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/QFT.html#Create-a-Distributed-Circuit-for-performing-Quantum-Fourier-Transform">Create a Distributed Circuit for performing Quantum Fourier Transform</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="examples/QFT.html#For-2-processor-with-4-qubits">For 2 processor with 4 qubits</a></li>
+<li class="toctree-l4"><a class="reference internal" href="examples/QFT.html#For-4-processors-with-total-16-qubits">For 4 processors with total 16 qubits</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="examples/Shors.html">Distribute Shor’s Algorithm</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="components/circuit_remapper.html">Circuit Remapper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components/circuit_remapper.html#diskit.circuit_remapper.CircuitRemapper"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="components/circuit_remapper.html#diskit.circuit_remapper.CircuitRemapper.collate_measurements"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper.collate_measurements()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/circuit_remapper.html#diskit.circuit_remapper.CircuitRemapper.do_measure_ready"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper.do_measure_ready()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="components/circuit_remapper.html#diskit.circuit_remapper.CircuitRemapper.remap_circuit"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper.remap_circuit()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="components/layer.html">Layer</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="components/layer.html#diskit.components.layer.Layer"><code class="docutils literal notranslate"><span class="pre">Layer</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="components/layer.html#diskit.components.layer.Layer.add_operation"><code class="docutils literal notranslate"><span class="pre">Layer.add_operation()</span></code></a></li>
@@ -144,6 +158,10 @@
 <h1>Components<a class="headerlink" href="#components" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="components/circuit_remapper.html">Circuit Remapper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="components/circuit_remapper.html#diskit.circuit_remapper.CircuitRemapper"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="components/layer.html">Layer</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="components/layer.html#diskit.components.layer.Layer"><code class="docutils literal notranslate"><span class="pre">Layer</span></code></a></li>
 </ul>

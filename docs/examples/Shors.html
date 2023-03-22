@@ -44,6 +44,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quickstart</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="Topology.html">Example to create a topology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="CNOT.html">Distributed Circuit for a CNOT gates</a><ul>
@@ -62,6 +63,15 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../source.html">Components</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../components/circuit_remapper.html">Circuit Remapper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/circuit_remapper.html#diskit.circuit_remapper.CircuitRemapper"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../components/circuit_remapper.html#diskit.circuit_remapper.CircuitRemapper.collate_measurements"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper.collate_measurements()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../components/circuit_remapper.html#diskit.circuit_remapper.CircuitRemapper.do_measure_ready"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper.do_measure_ready()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../components/circuit_remapper.html#diskit.circuit_remapper.CircuitRemapper.remap_circuit"><code class="docutils literal notranslate"><span class="pre">CircuitRemapper.remap_circuit()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../components/layer.html">Layer</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../components/layer.html#diskit.components.layer.Layer"><code class="docutils literal notranslate"><span class="pre">Layer</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../components/layer.html#diskit.components.layer.Layer.add_operation"><code class="docutils literal notranslate"><span class="pre">Layer.add_operation()</span></code></a></li>
@@ -426,7 +436,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">c_amod15</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">power</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Controlled multiplication by a mod 15&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Controlled multiplication by a mod 15&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">a</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">13</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;a&#39; must be 2,4,7,8,11 or 13&quot;</span><span class="p">)</span>
     <span class="n">U</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
@@ -458,7 +468,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">qft_dagger</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;n-qubit QFTdagger the first n qubits in circ&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;n-qubit QFTdagger the first n qubits in circ&quot;&quot;&quot;</span>
     <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
     <span class="c1"># Don&#39;t forget the Swaps!</span>
     <span class="k">for</span> <span class="n">qubit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">):</span>
