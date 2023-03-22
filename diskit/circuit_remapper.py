@@ -205,9 +205,11 @@ class CircuitRemapper:
                       decompose_list: List[str] = None):
         """
         Remap the circuit for the topology.
-        Returns: a distributed circuit over the topology
+
         Args:
-            circuit: The circuit to be distributed.
+            circuit: The circuit to be distributed
+            decompose: Decompose the circuit into compatible 2-qubit gates if possible
+            decompose_list: Gate names which should be decomposed
         Returns:
             A distributed circuit over the topology.
         """
@@ -311,10 +313,12 @@ class CircuitRemapper:
     def collate_measurements(sim_results: dict, num_qubits: int):
         """
         Collate the measurements from the simulation results.
+
         Args:
             sim_results: simulation results from the simulator
             num_qubits: number of qubits in the circuit
-        Returns: A dictionary of measurements
+        Returns:
+            A dictionary of measurements
         """
         sim_dict = {}
         for key in sim_results.keys():
@@ -331,10 +335,13 @@ class CircuitRemapper:
     def do_measure_ready(circ: QuantumCircuit, topology: Topology):
         """
         Make the circuit is ready for measurement.
+
         Args:
             circ: the circuit to measure.
             topology: The network topology.
-        Returns: Circuit ready for measurement
+
+        Returns:
+            Circuit ready for measurement
         """
         n_q = topology.num_qubits()
         all_qubits = topology.get_all_qubits()
@@ -344,19 +351,21 @@ class CircuitRemapper:
 
     @staticmethod
     def _decompose_ready(circ: QuantumCircuit, list_of_gates: List[str] = None,
-                         do_decompose: bool = True):
+                         do_decompose: bool = True, max_time=60):
         """
         Decompose the circuit into basic gates(1 and 2 qubit gates).
         Args:
             circ: the circuit to decompose.
-            topology: The network topology.
+            list_of_gates: The network topology.
+            max_time: Seconds to spend decomposing the circuit before falling back to default gate set
         Returns: Decomposed circuit
         """
-        timeout = time.time() + 60  # 1 minute from now
+        timeout = time.time() + max_time
 
         num_large_gates = 1
         circ_copy = circ.copy()
         incompatible_gate_present = False
+        printed_warning = False
         if list_of_gates is None:
             list_of_gates = []
         while num_large_gates > 0:
@@ -373,6 +382,12 @@ class CircuitRemapper:
                     incompatible_gate_present = True
                     if do_decompose is False:
                         break
+                    if not printed_warning:
+                        print('Warning: Swap gate found in circuit. '
+                              'Swap gates cannot be automatically decomposed and should be'
+                              'transpiled by the user. Skipping it for now but may lead to errors if ignored.')
+                        printed_warning = True
+                        num_large_gates -= 1
                     circ_copy = circ_copy.decompose(gate)
                 elif gate[0].name in list_of_gates:
                     num_large_gates += 1
@@ -382,7 +397,7 @@ class CircuitRemapper:
             if do_decompose is False and num_large_gates > 0:
                 break
             if do_decompose is True and time.time() > timeout:
-                print("Single level decomposition cutoff of 1 minute reached.",
+                print(f"Warning: Single level decomposition cutoff of {max_time} seconds reached.",
                       "Performing transpilation with basis gates: cx, u1, u2, u3, id")
                 circ_copy = transpile(circ_copy, basis_gates=[
                     'cx', 'u1', 'u2', 'u3', 'id'])
